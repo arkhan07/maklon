@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maklon.id — System Flowchart & Menu Structure</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0F1F3D; --navy2:#1B3461; --blue:#1E6FE8; --blue-lt:#EFF6FF;
+  --emerald:#059669; --em-lt:#D1FAE5;
+  --amber:#F59E0B; --am-lt:#FEF3C7;
+  --rose:#E11D48; --rose-lt:#FFE4E6;
+  --violet:#7C3AED; --vi-lt:#EDE9FE;
+  --cyan:#0891B2; --cy-lt:#ECFEFF;
+  --gray-50:#F8FAFC; --gray-100:#F1F5F9; --gray-200:#E2E8F0;
+  --gray-400:#94A3B8; --gray-500:#64748B; --gray-700:#334155;
+  --white:#fff;
+  --shadow:0 4px 20px rgba(0,0,0,.08);
+  --shadow-lg:0 12px 40px rgba(0,0,0,.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'DM Sans',sans-serif;background:#F0F4F8;color:var(--gray-700);overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Sora',sans-serif}
+
+/* NAV */
+.top-nav{background:var(--navy);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.top-nav .logo{color:white;font-family:'Sora',sans-serif;font-weight:800;font-size:18px}
+.top-nav .logo span{color:var(--blue)}
+.nav-tabs{display:flex;gap:4px}
+.nav-tab{padding:8px 16px;border-radius:8px;color:rgba(255,255,255,.6);font-size:13px;font-weight:600;cursor:pointer;transition:.2s;border:none;background:transparent}
+.nav-tab:hover{color:white;background:rgba(255,255,255,.1)}
+.nav-tab.active{background:var(--blue);color:white}
+
+/* PAGES */
+.page{display:none;padding:32px;max-width:1400px;margin:0 auto}
+.page.active{display:block}
+
+/* PAGE HEADER */
+.page-header{text-align:center;margin-bottom:48px}
+.page-header h1{font-size:32px;font-weight:800;color:var(--navy);margin-bottom:8px}
+.page-header p{font-size:15px;color:var(--gray-500);max-width:600px;margin:0 auto}
+.header-tag{display:inline-block;background:var(--blue-lt);color:var(--blue);font-size:12px;font-weight:700;padding:4px 14px;border-radius:100px;margin-bottom:12px;text-transform:uppercase;letter-spacing:.5px}
+
+/* ===================== FLOW CHART ===================== */
+.flow-section{margin-bottom:56px}
+.flow-section-title{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--gray-400);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.flow-section-title::after{content:'';flex:1;height:1px;background:var(--gray-200)}
+
+/* Swimlane layout */
+.swimlane{display:grid;gap:0}
+.lane{display:flex;align-items:stretch;gap:0;min-height:80px}
+.lane-label{width:140px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;border-right:2px solid var(--gray-200);padding:12px 8px;text-align:center}
+.lane-content{flex:1;display:flex;align-items:center;gap:0;padding:16px 20px;overflow-x:auto}
+
+/* Flow nodes */
+.node{position:relative;flex-shrink:0}
+.node-box{border-radius:10px;padding:12px 16px;font-size:13px;font-weight:600;text-align:center;min-width:130px;max-width:160px;line-height:1.4;transition:.2s;cursor:default}
+.node-box:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+
+/* Arrow connector */
+.arrow{display:flex;align-items:center;flex-shrink:0;padding:0 6px;color:var(--gray-400);font-size:18px;font-weight:300}
+.arrow-down{display:flex;justify-content:center;color:var(--gray-400);font-size:20px;padding:4px 0;width:100%}
+.arrow-branch{padding:0 4px;color:var(--gray-300);font-size:14px}
+
+/* Node styles */
+.n-start{background:var(--navy);color:white;border-radius:100px!important}
+.n-end{background:var(--emerald);color:white;border-radius:100px!important}
+.n-action{background:white;border:1.5px solid var(--gray-200);color:var(--gray-700)}
+.n-decision{background:var(--am-lt);border:1.5px solid var(--amber);color:#92400E;border-radius:12px;transform:rotate(0deg)}
+.n-system{background:var(--blue-lt);border:1.5px solid var(--blue);color:#1D4ED8}
+.n-admin{background:var(--vi-lt);border:1.5px solid var(--violet);color:var(--violet)}
+.n-warning{background:var(--rose-lt);border:1.5px solid var(--rose);color:var(--rose)}
+.n-success{background:var(--em-lt);border:1.5px solid var(--emerald);color:#065F46}
+.n-payment{background:#FFFBEB;border:1.5px solid var(--amber);color:#92400E}
+
+/* ---- CARD-BASED FLOW for main visualization ---- */
+.flow-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-bottom:32px}
+.flow-phase{background:white;border-radius:16px;padding:24px;box-shadow:var(--shadow);border-top:4px solid var(--blue)}
+.flow-phase.phase-legal{border-top-color:var(--violet)}
+.flow-phase.phase-product{border-top-color:var(--blue)}
+.flow-phase.phase-payment{border-top-color:var(--amber)}
+.flow-phase.phase-production{border-top-color:var(--emerald)}
+.flow-phase.phase-admin{border-top-color:var(--rose)}
+.flow-phase h3{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.flow-phase .phase-num{width:24px;height:24px;border-radius:50%;background:var(--navy);color:white;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.phase-sub{font-size:12px;color:var(--gray-400);margin-bottom:16px}
+.flow-steps{display:flex;flex-direction:column;gap:8px}
+.fstep{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:8px;background:var(--gray-50);border:1px solid var(--gray-100)}
+.fstep-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.fstep-body{}
+.fstep-title{font-size:13px;font-weight:700;color:var(--navy);line-height:1.3}
+.fstep-desc{font-size:11px;color:var(--gray-500);margin-top:2px;line-height:1.4}
+.fstep-price{font-size:11px;font-weight:700;color:var(--blue);margin-top:3px}
+.fstep.decision{background:var(--am-lt);border-color:#FDE68A}
+.fstep.decision .fstep-title{color:#92400E}
+.fstep.blocked{background:var(--rose-lt);border-color:#FECDD3}
+.fstep.blocked .fstep-title{color:var(--rose)}
+.fstep.success{background:var(--em-lt);border-color:#A7F3D0}
+
+/* GATE indicator */
+.gate{background:linear-gradient(135deg,var(--rose-lt),#FFF1F2);border:2px solid var(--rose);border-radius:12px;padding:14px 16px;margin:16px 0;display:flex;align-items:center;gap:10px}
+.gate-icon{font-size:24px}
+.gate-text h4{font-size:13px;font-weight:800;color:var(--rose)}
+.gate-text p{font-size:12px;color:#9F1239;margin-top:2px}
+
+/* Big arrow between phases */
+.phase-arrow{display:flex;align-items:center;justify-content:center;font-size:28px;color:var(--gray-300);padding:8px 0}
+
+/* ===================== LINEAR FLOW DIAGRAM ===================== */
+.linear-flow{display:flex;flex-direction:column;gap:0;position:relative}
+.linear-flow::before{content:'';position:absolute;left:28px;top:20px;bottom:20px;width:2px;background:linear-gradient(180deg,var(--navy),var(--blue),var(--emerald));border-radius:2px;z-index:0}
+.lf-row{display:flex;gap:16px;align-items:flex-start;position:relative;z-index:1;padding-bottom:4px}
+.lf-dot{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:3px solid white;box-shadow:var(--shadow)}
+.lf-dot.dot-blue{background:var(--blue)}
+.lf-dot.dot-violet{background:var(--violet)}
+.lf-dot.dot-amber{background:var(--amber)}
+.lf-dot.dot-emerald{background:var(--emerald)}
+.lf-dot.dot-rose{background:var(--rose)}
+.lf-dot.dot-cyan{background:var(--cyan)}
+.lf-dot.dot-navy{background:var(--navy)}
+.lf-connector{width:56px;display:flex;justify-content:center;padding:0;flex-shrink:0}
+.lf-connector .line{width:2px;height:32px;background:linear-gradient(180deg,rgba(15,31,61,.3),rgba(30,111,232,.3))}
+.lf-card{flex:1;background:white;border-radius:12px;padding:18px 20px;box-shadow:var(--shadow);margin-bottom:8px}
+.lf-card h4{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:4px}
+.lf-card .sub{font-size:13px;color:var(--gray-500);margin-bottom:10px}
+.lf-tag{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;margin-right:6px;margin-bottom:4px}
+.tag-blue{background:var(--blue-lt);color:var(--blue)}
+.tag-violet{background:var(--vi-lt);color:var(--violet)}
+.tag-amber{background:var(--am-lt);color:#92400E}
+.tag-emerald{background:var(--em-lt);color:#065F46}
+.tag-rose{background:var(--rose-lt);color:var(--rose)}
+.tag-gray{background:var(--gray-100);color:var(--gray-500)}
+.tag-navy{background:#E8EDF5;color:var(--navy)}
+
+/* Decision fork */
+.decision-fork{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.fork-option{border-radius:10px;padding:12px 14px;font-size:13px;border:1.5px solid}
+.fork-a{background:var(--blue-lt);border-color:var(--blue);color:#1D4ED8}
+.fork-b{background:var(--vi-lt);border-color:var(--violet);color:var(--violet)}
+.fork-a h5,.fork-b h5{font-size:13px;font-weight:700;margin-bottom:4px}
+.fork-a p,.fork-b p{font-size:11px;opacity:.8;line-height:1.4}
+.fork-a .price,.fork-b .price{font-size:12px;font-weight:700;margin-top:6px}
+
+/* BLOCKED gate full-width */
+.verify-gate{background:linear-gradient(135deg,#FFF1F2 0%,#FFE4E6 100%);border:2px dashed var(--rose);border-radius:14px;padding:20px 24px;display:flex;align-items:center;gap:16px;margin:12px 0}
+.vg-icon{font-size:36px;flex-shrink:0}
+.vg-text h3{font-size:16px;font-weight:800;color:var(--rose)}
+.vg-text p{font-size:13px;color:#9F1239;margin-top:4px}
+.vg-badge{background:var(--rose);color:white;font-size:12px;font-weight:700;padding:4px 12px;border-radius:100px;margin-top:8px;display:inline-block}
+
+/* ===================== PRODUCT CATALOG ===================== */
+.catalog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.cat-card{background:white;border-radius:14px;padding:20px;box-shadow:var(--shadow);border-top:3px solid}
+.cat-card h3{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.cat-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:100px;margin-left:6px}
+.product-list{display:flex;flex-direction:column;gap:4px}
+.product-item{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--gray-50);border-radius:7px;font-size:12px}
+.product-name{color:var(--gray-700);font-weight:500}
+.product-cat{color:var(--gray-400);font-size:11px}
+.product-price{font-weight:700;color:var(--blue);font-size:12px;flex-shrink:0}
+.more-btn{font-size:12px;color:var(--blue);font-weight:600;text-align:center;padding:8px;cursor:pointer;margin-top:8px}
+
+/* ===================== MATERIAL TABLE ===================== */
+.material-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.mfilter{padding:6px 14px;border-radius:100px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid var(--gray-200);background:white;color:var(--gray-500);transition:.2s}
+.mfilter:hover,.mfilter.active{background:var(--navy);color:white;border-color:var(--navy)}
+.mat-table{width:100%;border-collapse:collapse;background:white;border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.mat-table th{padding:12px 16px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray-400);background:var(--gray-50)}
+.mat-table td{padding:10px 16px;font-size:13px;border-bottom:1px solid var(--gray-100)}
+.mat-table tr:last-child td{border-bottom:none}
+.mat-table tr:hover td{background:var(--gray-50)}
+.badge-type{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:100px}
+.bt-extract{background:#FEF9C3;color:#A16207}
+.bt-oil{background:#D1FAE5;color:#065F46}
+.bt-active{background:#DBEAFE;color:#1D4ED8}
+.bt-perfume{background:#F3E8FF;color:var(--violet)}
+
+/* ===================== MENU STRUCTURE ===================== */
+.menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.menu-panel{background:white;border-radius:16px;padding:28px;box-shadow:var(--shadow)}
+.menu-panel.admin-panel{border-top:4px solid var(--rose)}
+.menu-panel.user-panel{border-top:4px solid var(--blue)}
+.menu-panel h2{font-size:18px;font-weight:800;color:var(--navy);margin-bottom:4px}
+.menu-panel .role-badge{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;margin-bottom:16px}
+.role-admin{background:var(--rose-lt);color:var(--rose)}
+.role-user{background:var(--blue-lt);color:var(--blue)}
+.menu-section{margin-bottom:20px}
+.menu-section-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--gray-400);margin-bottom:8px;padding-left:4px}
+.menu-item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:9px;margin-bottom:4px;border:1px solid var(--gray-100)}
+.menu-item-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.menu-item-body .title{font-size:13px;font-weight:700;color:var(--navy)}
+.menu-item-body .desc{font-size:11px;color:var(--gray-500);margin-top:2px;line-height:1.4}
+.menu-item-badge{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:100px;flex-shrink:0}
+.mb-new{background:var(--em-lt);color:#065F46}
+.mb-important{background:var(--rose-lt);color:var(--rose)}
+.mb-pending{background:var(--am-lt);color:#92400E}
+
+/* Pricing summary card */
+.pricing-card{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);border-radius:16px;padding:28px;color:white;margin-top:24px}
+.pricing-card h3{font-size:18px;font-weight:800;margin-bottom:20px}
+.pricing-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.pricing-row:last-of-type{border-bottom:none}
+.pricing-row .item{font-size:13px;opacity:.8}
+.pricing-row .price{font-family:'Sora',sans-serif;font-size:15px;font-weight:700}
+.pricing-row .opt{font-size:11px;opacity:.5;margin-top:2px}
+
+@media(max-width:900px){
+  .menu-grid{grid-template-columns:1fr}
+  .decision-fork{grid-template-columns:1fr}
+  .flow-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="top-nav">
+  <div class="logo">Maklon<span>.id</span> — System Design</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showTab('flow')">📊 User Flow</button>
+    <button class="nav-tab" onclick="showTab('admin')">🛡️ Admin Flow</button>
+    <button class="nav-tab" onclick="showTab('menu')">📋 Menu Structure</button>
+    <button class="nav-tab" onclick="showTab('products')">🧴 Produk Catalog</button>
+    <button class="nav-tab" onclick="showTab('materials')">🧪 Material List</button>
+    <button class="nav-tab" onclick="showTab('pricing')">💰 Pricing Logic</button>
+  </div>
+</div>
+
+<!-- ===================== USER FLOW ===================== -->
+<div id="tab-flow" class="page active">
+  <div class="page-header">
+    <div class="header-tag">User Journey</div>
+    <h1>Alur Lengkap Customer Maklon.id</h1>
+    <p>Dari Registrasi hingga Produk Jadi — setiap tahap beserta gate, keputusan, dan data yang diperlukan</p>
+  </div>
+
+  <div class="linear-flow">
+
+    <!-- STEP 1: Register -->
+    <div class="lf-row">
+      <div class="lf-dot dot-navy" style="color:white;font-size:18px;font-weight:800">1</div>
+      <div class="lf-card">
+        <h4>🔐 Registrasi Akun</h4>
+        <div class="sub">User mengisi form pendaftaran atau login dengan Google</div>
+        <span class="lf-tag tag-navy">Input: Nama, Email, No. WA, Jenis Usaha, Password</span>
+        <span class="lf-tag tag-blue">Google OAuth tersedia</span>
+        <div style="background:var(--gray-50);border-radius:8px;padding:10px 14px;margin-top:10px;font-size:12px;color:var(--gray-500);">
+          ⚠️ Saat daftar, user diberitahu bahwa <strong>verifikasi legalitas wajib</strong> sebelum bisa order
+        </div>
+      </div>
+    </div>
+    <div class="lf-row">
+      <div class="lf-connector"><div class="line"></div></div>
+      <div style="flex:1"></div>
+    </div>
+
+    <!-- STEP 2: GATE Verifikasi -->
+    <div class="lf-row">
+      <div class="lf-dot dot-rose" style="color:white;">🔒</div>
+      <div class="lf-card" style="border:2px dashed var(--rose)">
+        <div class="verify-gate">
+          <div class="vg-icon">🔒</div>
+          <div class="vg-text">
+            <h3>GATE: Verifikasi Legalitas Wajib</h3>
+            <p>Pilih cara verifikasi legalitas perusahaan Anda. Opsi A memerlukan approval, Opsi B langsung terbuka.</p>
+            <span class="vg-badge">Pilih Opsi Sesuai Kebutuhan</span>
+          </div>
+        </div>
+        <div class="decision-fork">
+          <div class="fork-option fork-a">
+            <h5>📁 Opsi A: Upload Dokumen (Gratis)</h5>
+            <p>Sudah punya PT/CV → Upload Akta + NIB + SIUP</p>
+            <div class="price">✅ Gratis verifikasi | 1–3 hari kerja</div>
+            <div style="margin-top:10px;background:#FFE4E6;border:1px solid var(--rose);border-radius:6px;padding:8px 10px;font-size:11px;color:var(--rose)">
+              <strong>⚠️ FITUR TERKUNCI SAMPAI APPROVED</strong><br>
+              Order, Invoice, Payment terkunci hingga admin approve dokumen Anda
+            </div>
+          </div>
+          <div class="fork-option fork-b">
+            <h5>⚖️ Opsi B: Beli Paket Legalitas</h5>
+            <p>Belum punya → Beli paket pembuatan PT/CV + izin lengkap</p>
+            <div class="price">💰 Rp 1,5jt – Rp 5jt | 7–14 hari kerja</div>
+            <div style="margin-top:10px;background:var(--em-lt);border:1px solid var(--emerald);border-radius:6px;padding:8px 10px;font-size:11px;color:#065F46">
+              <strong>✅ FITUR LANGSUNG TERBUKA</strong><br>
+              Setelah bayar paket legalitas, semua fitur order langsung available
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px">
+          <span class="lf-tag tag-violet">PT Perorangan: Rp 1.500.000</span>
+          <span class="lf-tag tag-violet">PT Perseroan: Rp 5.000.000</span>
+          <span class="lf-tag tag-rose">Pembayaran Legalitas: 100% (Tidak masuk DP 50%)</span>
+        </div>
+      </div>
+    </div>
+    <div class="lf-row">
+      <div class="lf-connector"><div class="line"></div></div>
+      <div style="flex:1"></div>
+    </div>
+
+    <!-- STEP 3: Dashboard -->
+    <div class="lf-row">
+      <div class="lf-dot dot-blue" style="color:white;font-size:18px;font-weight:800">3</div>
+      <div class="lf-card">
+        <h4>📊 Dashboard Customer (Setelah Terverifikasi)</h4>
+        <div class="sub">Akun terbuka penuh — semua fitur tersedia</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span class="lf-tag tag-blue">Overview & Statistik</span>
+          <span class="lf-tag tag-blue">Order Saya</span>
+          <span class="lf-tag tag-blue">Invoice & Pembayaran</span>
+          <span class="lf-tag tag-blue">Tracking Produksi</span>
+          <span class="lf-tag tag-blue">Profile & Dokumen</span>
+          <span class="lf-tag tag-emerald">✅ Buat Order Baru — TERBUKA</span>
+        </div>
+      </div>
+    </div>
+    <div class="lf-row">
+      <div class="lf-connector"><div class="line"></div></div>
+      <div style="flex:1"></div>
+    </div>
+
+    <!-- STEP 4: ADMISSION & LEGAL (Order Step 1) -->
+    <div class="lf-row">
+      <div class="lf-dot dot-violet" style="color:white;">📋</div>
+      <div class="lf-card">
+        <h4>📋 Order Step 1 — Admission & Legal Brand</h4>
+        <div class="sub">Pilihan merek dan izin edar untuk produk yang akan diproduksi</div>
+
+        <div style="font-size:12px;font-weight:700;color:var(--gray-500);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Pilih Jenis Merek:</div>
+        <div class="decision-fork">
+          <div class="fork-option fork-a">
+            <h5>🏷️ HAKI Sendiri</h5>
+            <p>Merek didaftarkan ke DJKI atas nama perusahaan sendiri. Membutuhkan pembuatan logo dan pendaftaran resmi.</p>
+            <div class="price">Logo: Rp 1.500.000 | Pendaftaran: Rp 2.750.000/kelas</div>
+          </div>
+          <div class="fork-option fork-b">
+            <h5>🤝 Undername Brand</h5>
+            <p>Pakai nama brand sendiri tapi terdaftar di bawah entitas Maklon.id. Lebih cepat & murah.</p>
+            <div class="price">✅ Tanpa biaya DJKI</div>
+          </div>
+        </div>
+
+        <div style="font-size:12px;font-weight:700;color:var(--gray-500);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.5px">Izin Edar (Wajib & Opsional):</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div style="background:var(--rose-lt);border:1.5px solid var(--rose);border-radius:9px;padding:10px 14px;font-size:12px;min-width:200px">
+            <div style="font-weight:800;color:var(--rose)">🔴 BPOM — WAJIB</div>
+            <div style="color:#9F1239;margin-top:2px">Rp 1.250.000</div>
+          </div>
+          <div style="background:var(--am-lt);border:1.5px solid var(--amber);border-radius:9px;padding:10px 14px;font-size:12px;min-width:200px">
+            <div style="font-weight:800;color:#92400E">🟡 Sertifikasi Halal — Opsional</div>
+            <div style="color:#A16207;margin-top:2px">Rp 2.500.000</div>
+          </div>
+        </div>
+        <div style="margin-top:12px;background:var(--blue-lt);border-radius:9px;padding:12px;font-size:12px;color:var(--blue)">
+          📝 Form: Nama Brand, Logo (upload), Deskripsi Brand, Deskripsi Visual Logo, Terjemahan nama (jika bahasa asing)
+        </div>
+      </div>
+    </div>
+    <div class="lf-row">
+      <div class="lf-connector"><div class="line"></div></div>
+      <div style="flex:1"></div>
+    </div>
+
+    <!-- STEP 5: Pilih Produk (Order Step 2) -->
+    <div class="lf-row">
+      <div class="lf-dot dot-blue" style="color:white;">🧴</div>
+      <div class="lf-card">
+        <h4>🧴 Order Step 2 — Pilih Kategori & Produk</h4>
+        <div class="sub">Hierarki 4 level kategori dari data Excel. Base price bervariasi per produk.</div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-top:8px">
+          <div style="background:#FEF3C7;border-radius:9px;padding:10px;text-align:center;font-size:12px;font-weight:700;color:#92400E">👶 Baby Care<br><span style="font-weight:400;color:var(--gray-400);font-size:11px">13 produk</span></div>
+          <div style="background:var(--blue-lt);border-radius:9px;padding:10px;text-align:center;font-size:12px;font-weight:700;color:#1D4ED8">🧴 Personal Care<br><span style="font-weight:400;color:var(--gray-400);font-size:11px">76 produk</span></div>
+          <div style="background:#F3E8FF;border-radius:9px;padding:10px;text-align:center;font-size:12px;font-weight:700;color:var(--violet)">💄 Makeup<br><span style="font-weight:400;color:var(--gray-400);font-size:11px">11 produk</span></div>
+          <div style="background:var(--rose-lt);border-radius:9px;padding:10px;text-align:center;font-size:12px;font-weight:700;color:var(--rose)">🤱 Mom's Care<br><span style="font-weight:400;color:var(--gray-400);font-size:11px">30 produk</span></div>
+          <div style="background:var(--cy-lt);border-radius:9px;padding:10px;text-align:center;font-size:12px;font-weight:700;color:var(--cyan)">👨 Men's Care<br><span style="font-weight:400;color:var(--gray-400);font-size:11px">23 produk</span></div>
+          <div style="background:var(--vi-lt);border-radius:9px;padding:10px;text-align:center;font-size:12px;font-weight:700;color:var(--violet)">🌸 Perfume<br><span style="font-weight:400;color:var(--gray-400);font-size:11px">5 produk</span></div>
+          <div style="background:var(--em-lt);border-radius:9px;padding:10px;text-align:center;font-size:12px;font-weight:700;color:#065F46">🏠 Home Care<br><span style="font-weight:400;color:var(--gray-400);font-size:11px">19 produk</span></div>
+        </div>
+        <div style="margin-top:12px;font-size:12px;color:var(--gray-500);background:var(--gray-50);padding:10px 12px;border-radius:8px">
+          📊 Navigasi: Level 1 (Kategori Utama) → Level 2 (Subkategori) → Level 3 (Sub-sub) → Level 4 (Nama Produk)<br>
+          💡 Base Formula Price: <strong>Bervariasi per produk</strong> (tidak flat Rp 10.000/100ml)<br>
+          📝 Setiap produk memiliki pricing berbeda sesuai kompleksitas formulasi
+        </div>
+      </div>
+    </div>
+    <div class="lf-row">
+      <div class="lf-connector"><div class="line"></div></div>
+      <div style="flex:1"></div>
+    </div>
+
+    <!-- STEP 6: Add-on Material -->
+    <div class="lf-row">
+      <div class="lf-dot dot-cyan" style="color:white;">🧪</div>
+      <div class="lf-card">
+        <h4>🧪 Order Step 3 — Add-on Material (Bahan Tambahan)</h4>
+        <div class="sub">140+ bahan aktif tersedia dengan harga per ml. Dapat dipilih lebih dari satu.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+          <span class="lf-tag tag-amber">Extract (27 bahan)</span>
+          <span class="lf-tag tag-emerald">Oil (23 bahan)</span>
+          <span class="lf-tag tag-blue">Active (35 bahan)</span>
+          <span class="lf-tag tag-violet">Perfume (57 pilihan)</span>
+          <span class="lf-tag tag-gray">+ Kategori Custom (Editable)</span>
+        </div>
+        <div style="font-size:12px;color:var(--gray-500);background:var(--gray-50);padding:10px 12px;border-radius:8px;margin-bottom:10px">
+          💡 <strong>Rumus kalkulasi per produk:</strong> Harga per ml × Volume (ml) × Qty (pcs)<br>
+          Contoh: Ceramide @ Rp 1.402/ml × 0.5ml dalam 30ml produk × 1000 pcs = Rp 701.000<br>
+          <strong>Minimum order: 100 pcs</strong>
+        </div>
+        <div style="background:var(--blue-lt);border:1.5px solid var(--blue);border-radius:10px;padding:14px;margin-top:10px">
+          <div style="font-size:13px;font-weight:700;color:var(--blue);margin-bottom:8px">📋 Informasi Bahan Baku (4 Kolom)</div>
+          <div style="font-size:12px;color:#1D4ED8;line-height:2">
+            1️⃣ <strong>Nama Bahan</strong> — Nama material<br>
+            2️⃣ <strong>Jenis/Kategori</strong> — Extract, Oil, Active, Perfume, dll (kategori bisa ditambah/edit oleh admin)<br>
+            3️⃣ <strong>Harga per ml</strong> — Pricing dalam Rupiah<br>
+            4️⃣ <strong>Deskripsi</strong> — Penjelasan singkat fungsi & manfaat bahan (misal: "Moisturizer alami, cocok untuk kulit kering")
+          </div>
+        </div>
+        <div style="margin-top:10px;background:var(--vi-lt);border-radius:9px;padding:12px;font-size:12px;color:var(--violet)">
+          ⚙️ <strong>Admin dapat menambah kategori baru</strong> seperti: Pewarna, Pengawet, Emulsifier, Thickener, dll sesuai kebutuhan
+        </div>
+      </div>
+    </div>
+    <div class="lf-row">
+      <div class="lf-connector"><div class="line"></div></div>
+      <div style="flex:1"></div>
+    </div>
+
+    <!-- STEP 7: Volume & Kemasan -->
+    <div class="lf-row">
+      <div class="lf-dot dot-amber" style="color:white;">📦</div>
+      <div class="lf-card">
+        <h4>📦 Order Step 4 — Volume, Qty & Kemasan</h4>
+        <div class="sub">Tentukan ukuran produk, jumlah produksi, dan jenis kemasan</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray-400);margin-bottom:8px">Volume & Qty</div>
+            <div style="background:var(--gray-50);border-radius:8px;padding:10px 12px;font-size:12px;line-height:2">
+              • Volume per pcs: input manual (ml)<br>
+              • Qty Order: input manual (min. 100 pcs)<br>
+              • Harga otomatis terhitung di summary
+            </div>
+          </div>
+          <div>
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gray-400);margin-bottom:8px">Jenis Kemasan (10+ pilihan)</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px">
+              <span class="lf-tag tag-gray">Botol Pump</span>
+              <span class="lf-tag tag-gray">Botol Fliptop</span>
+              <span class="lf-tag tag-gray">Spray Normal</span>
+              <span class="lf-tag tag-gray">Spray Mist</span>
+              <span class="lf-tag tag-gray">Spray Trigger</span>
+              <span class="lf-tag tag-gray">Jar</span>
+              <span class="lf-tag tag-gray">Case Cushion</span>
+              <span class="lf-tag tag-gray">Botol Roll On</span>
+              <span class="lf-tag tag-gray">Lipstick/Lipbalm</span>
+              <span class="lf-tag tag-gray">Liptint</span>
+            </div>
+            <div style="margin-top:10px;background:var(--blue-lt);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--blue)">
+              📸 <strong>Katalog Kemasan:</strong> Setiap jenis kemasan punya katalog gambar dengan berbagai pilihan desain/ukuran. Masing-masing pilihan punya harga sendiri (tidak flat price). Customer pilih dari katalog visual.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="lf-row">
+      <div class="lf-connector"><div class="line"></div></div>
+      <div style="flex:1"></div>
+    </div>
+
+    <!-- STEP 8: Desain Packaging -->
+    <div class="lf-row">
+      <div class="lf-dot dot-violet" style="color:white;">🎨</div>
+      <div class="lf-card">
+        <h4>🎨 Order Step 5 — Desain Packaging (Opsional)</h4>
+        <div class="sub">Jasa desain stiker/label packaging produk</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <div style="background:var(--vi-lt);border:1.5px solid var(--violet);border-radius:9px;padding:12px 16px;font-size:12px;flex:1;min-width:280px">
+            <div style="font-weight:800;color:var(--violet)">🎨 Jasa Desain Sticker — Rp 750.000</div>
+            <div style="color:#5B21B6;margin-top:4px">Input: Deskripsi konsep desain + upload referensi (.jpg, .png, .pdf)</div>
+          </div>
+          <div style="background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:9px;padding:12px 16px;font-size:12px;flex:1;min-width:280px">
+            <div style="font-weight:700;color:var(--gray-500)">📦 Desain Sendiri (Upload File)</div>
+            <div style="color:var(--gray-400);margin-top:4px;line-height:1.6">
+              Customer upload desain sendiri untuk review BPOM compliance.<br>
+              <strong>Wajib file mentah:</strong> .ai / .psd via link (Google Drive/Dropbox)<br>
+              <strong>Waktu upload:</strong> Bebas, bisa setelah DP transfer
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:12px;background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:10px;padding:12px;font-size:12px;color:#92400E">
+          <strong>⚠️ Ketentuan Upload Desain Sendiri:</strong><br>
+          • File format: .ai (Adobe Illustrator) atau .psd (Photoshop) — file mentah/editable<br>
+          • Upload via link: Form input URL (Google Drive, Dropbox, dll)<br>
+          • Review BPOM: Admin akan cek compliance dengan ketentuan BPOM & bisa revisi jika perlu<br>
+          • Timing: Boleh upload kapan saja, bahkan setelah DP. Tidak harus bersamaan dengan order submit
+        </div>
+      </div>
+    </div>
+    <div class="lf-row">
+      <div class="lf-connector"><div class="line"></div></div>
+      <div style="flex:1"></div>
+    </div>
+
+    <!-- STEP 8.5: Request Sample (Optional) -->
+    <div class="lf-row">
+      <div class="lf-dot dot-cyan" style="color:white;">🧪</div>
+      <div class="lf-card" style="border:2px solid var(--cyan)">
+        <h4>🧪 Order Step 5.5 — Request Sample (Opsional)</h4>
+        <div class="sub">Customer dapat request sample produk sebelum produksi massal. Diproses setelah order dikonfirmasi.</div>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px">
+          <div style="background:var(--cyan);color:white;border-radius:10px;padding:16px">
+            <div style="font-size:16px;font-weight:800;margin-bottom:8px">✅ Request Sample</div>
+            <div style="font-size:13px;opacity:0.95;line-height:1.8">
+              💰 <strong>Biaya: Rp 500.000 / produk</strong><br>
+              🔄 Revisi maksimal: 2x<br>
+              ⏱️ Waktu pembuatan: 5-7 hari kerja<br>
+              📦 Dapat 100ml sample produk
+            </div>
+          </div>
+          
+          <div style="background:var(--gray-50);border:1.5px solid var(--gray-200);border-radius:10px;padding:16px">
+            <div style="font-size:16px;font-weight:800;color:var(--gray-700);margin-bottom:8px">⏩ Skip Sample</div>
+            <div style="font-size:13px;color:var(--gray-500);line-height:1.8">
+              Langsung ke produksi massal tanpa sample testing. Cocok jika sudah yakin dengan formulasi.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:14px;background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:10px;padding:14px">
+          <div style="font-size:12px;font-weight:700;color:#92400E;margin-bottom:8px">⚠️ Ketentuan Request Sample:</div>
+          <div style="font-size:11px;color:#A16207;line-height:2">
+            • <strong>Maksimal 2x revisi</strong> dengan konsep yang sama (minor adjustment)<br>
+            • <strong>Perubahan konsep besar</strong> (ganti formula/bahan/warna) = charge baru Rp 500.000<br>
+            • Sample dibuat setelah order dikonfirmasi & payment sample diterima<br>
+            • Jika approve sample → lanjut produksi massal dengan DP 50%<br>
+            • Jika tidak approve setelah 2x revisi → customer bisa cancel atau charge baru untuk konsep berbeda
+          </div>
+        </div>
+
+        <div style="margin-top:10px;background:var(--blue-lt);border-radius:9px;padding:12px;font-size:12px;color:var(--blue)">
+          💡 <strong>Rekomendasi:</strong> Request sample sangat disarankan untuk produk baru atau formulasi custom untuk memastikan hasil sesuai ekspektasi sebelum produksi ribuan pcs.
+        </div>
+      </div>
+    </div>
+    <div class="lf-row">
+      <div class="lf-connector"><div class="line"></div></div>
+      <div style="flex:1"></div>
+    </div>
+
+    <!-- STEP 9: Review & Invoice -->
+    <div class="lf-row">
+      <div class="lf-dot dot-amber" style="color:white;">🧾</div>
+      <div class="lf-card">
+        <h4>🧾 Order Step 6 — Review & Invoice</h4>
+        <div class="sub">Konfirmasi semua pilihan, sistem generate invoice otomatis dengan breakdown terpisah untuk legalitas dan produk</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="background:var(--gray-50);border-radius:9px;padding:12px">
+            <div style="font-size:12px;font-weight:700;color:var(--gray-600);margin-bottom:8px">Breakdown Invoice:</div>
+            <div style="font-size:11px;color:var(--gray-500);line-height:2">
+              <strong style="color:var(--violet)">A. BIAYA LEGALITAS (100%):</strong><br>
+              + PT/CV (jika pilih Opsi B)<br>
+              + BPOM (mandatory)<br>
+              + Halal (opsional)<br>
+              + Logo & Merk (opsional)<br>
+              <strong style="color:var(--blue);margin-top:8px;display:block">B. BIAYA PRODUK (50% DP):</strong><br>
+              + Base Formula Price<br>
+              + Add-on Material cost<br>
+              + Kemasan cost<br>
+              + Desain Packaging (opsional)<br>
+              + Sample (opsional)<br>
+              <strong style="display:block;margin-top:8px">+ PPN 11%</strong>
+            </div>
+          </div>
+          <div style="background:var(--am-lt);border-radius:9px;padding:12px">
+            <div style="font-size:12px;font-weight:700;color:#92400E;margin-bottom:8px">Skema Pembayaran:</div>
+            <div style="font-size:11px;color:#A16207;line-height:2;margin-bottom:10px">
+              <strong style="color:var(--violet);font-size:12px">Pembayaran Pertama:</strong><br>
+              • Legalitas: <span style="font-weight:800">100%</span> (jika ada)<br>
+              • Produk: <span style="font-weight:800">DP 50%</span><br>
+              • Sample: <span style="font-weight:800">100%</span> (jika request)
+            </div>
+            <div style="font-size:11px;color:#A16207;line-height:2">
+              <strong style="color:var(--emerald);font-size:12px">Pembayaran Kedua:</strong><br>
+              • Produk: Sisa <span style="font-weight:800">50%</span><br>
+              • Dibayar setelah produk selesai & siap kirim
+            </div>
+          </div>
+        </div>
+        
+        <div style="margin-top:12px;background:#F3E8FF;border:1.5px solid var(--violet);border-radius:10px;padding:14px">
+          <div style="font-size:12px;font-weight:700;color:var(--violet);margin-bottom:6px">📊 Contoh Kalkulasi Invoice:</div>
+          <div style="font-size:11px;color:#5B21B6;line-height:2">
+            <strong>A. LEGALITAS (Opsi B - Beli Paket):</strong><br>
+            • PT Perorangan: Rp 1.500.000<br>
+            • BPOM: Rp 1.250.000<br>
+            • Halal: Rp 2.500.000<br>
+            <strong>Subtotal Legalitas: Rp 5.250.000</strong> → Bayar 100%<br><br>
+            
+            <strong>B. PRODUK (Serum Vit C 30ml × 1000 pcs):</strong><br>
+            • Base Formula: Rp 3.000.000<br>
+            • Add-on Material: Rp 2.200.000<br>
+            • Kemasan: Rp 500.000<br>
+            • Desain: Rp 750.000<br>
+            • Sample: Rp 500.000<br>
+            • Subtotal: Rp 6.950.000<br>
+            • PPN 11%: Rp 764.500<br>
+            <strong>Total Produk: Rp 7.714.500</strong> → Bayar DP 50% = <strong>Rp 3.857.250</strong><br><br>
+            
+            <strong style="color:var(--amber)">💰 TOTAL PEMBAYARAN PERTAMA: Rp 9.107.250</strong><br>
+            (Legalitas Rp 5.250.000 + DP Produk Rp 3.857.250)<br><br>
+            <strong style="color:var(--emerald)">💰 PELUNASAN (50%): Rp 3.857.250</strong><br>
+            (Dibayar setelah produk jadi)
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="lf-row">
+      <div class="lf-connector"><div class="line"></div></div>
+      <div style="flex:1"></div>
+    </div>
+
+    <!-- STEP 10: MOU GATE -->
+    <div class="lf-row">
+      <div class="lf-dot dot-violet" style="color:white;">📄</div>
+      <div class="lf-card" style="border:2px solid var(--violet)">
+        <div class="verify-gate" style="background:linear-gradient(135deg,#F3E8FF 0%,#EDE9FE 100%);border-color:var(--violet)">
+          <div class="vg-icon">📄</div>
+          <div class="vg-text">
+            <h3 style="color:var(--violet)">GATE: MOU (Memorandum of Understanding)</h3>
+            <p style="color:#5B21B6">Sebelum pembayaran DP dapat dilakukan, customer wajib menandatangani MOU. System auto-generate MOU berdasarkan detail order.</p>
+            <span class="vg-badge" style="background:var(--violet)">🔒 Pembayaran Terkunci Sampai MOU Signed</span>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <div style="background:var(--blue-lt);border:1.5px solid var(--blue);border-radius:10px;padding:14px">
+            <div style="font-size:14px;font-weight:800;color:var(--blue);margin-bottom:6px">1️⃣ Download MOU</div>
+            <div style="font-size:11px;color:#1D4ED8;line-height:1.6">System auto-generate MOU PDF dengan detail lengkap: spesifikasi produk, harga, terms & conditions. Customer download untuk ditandatangani.</div>
+          </div>
+          <div style="background:var(--violet);border:1.5px solid var(--violet);border-radius:10px;padding:14px;color:white">
+            <div style="font-size:14px;font-weight:800;margin-bottom:6px">2️⃣ Tanda Tangan MOU</div>
+            <div style="font-size:11px;opacity:.95;line-height:1.6">Customer print MOU, tandatangan di atas materai Rp 10.000, scan/foto, lalu upload kembali ke sistem dalam format PDF/JPG.</div>
+          </div>
+          <div style="background:var(--emerald);border:1.5px solid var(--emerald);border-radius:10px;padding:14px;color:white">
+            <div style="font-size:14px;font-weight:800;margin-bottom:6px">3️⃣ Admin Verifikasi</div>
+            <div style="font-size:11px;opacity:.95;line-height:1.6">Admin review MOU yang diupload. Jika valid → approve. Jika ada masalah → reject dengan catatan untuk upload ulang.</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;background:#FFFBEB;border:1.5px solid #FDE68A;border-radius:10px;padding:14px">
+          <div style="font-size:12px;font-weight:700;color:#92400E;margin-bottom:6px">📋 Isi MOU Otomatis:</div>
+          <div style="font-size:11px;color:#A16207;line-height:2">
+            ✓ Detail lengkap produk & spesifikasi<br>
+            ✓ Harga final & skema pembayaran (DP 50% + Sisa 50%)<br>
+            ✓ Timeline produksi & pengiriman<br>
+            ✓ Tanggung jawab kedua belah pihak<br>
+            ✓ Syarat & ketentuan pembatalan<br>
+            ✓ TTD digital dari Maklon.id (otomatis)<br>
+            ✓ Kolom TTD customer + materai
+          </div>
+        </div>
+
+        <div style="margin-top:12px;font-size:12px;color:var(--gray-500);background:var(--gray-50);padding:12px;border-radius:8px">
+          ⏱️ <strong>Estimasi waktu:</strong> Upload MOU → Admin review (max 1 hari kerja) → Approved → Customer bisa bayar DP
+        </div>
+      </div>
+    </div>
+    <div class="lf-row">
+      <div class="lf-connector"><div class="line"></div></div>
+      <div style="flex:1"></div>
+    </div>
+
+    <!-- STEP 11: Payment & Production -->
+    <div class="lf-row">
+      <div class="lf-dot dot-emerald" style="color:white;">✅</div>
+      <div class="lf-card">
+        <h4>🏭 Pembayaran DP & Produksi</h4>
+        <div class="sub">Setelah MOU approved, customer bayar DP 50%. Produksi dimulai setelah DP confirmed.</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span class="lf-tag tag-violet">MOU Approved ✅</span>
+          <span class="lf-tag tag-amber">Upload Bukti DP 50%</span>
+          <span class="lf-tag tag-emerald">DP Confirmed</span>
+          <span class="lf-tag tag-blue">Produksi Berjalan</span>
+          <span class="lf-tag tag-blue">QC & Quality Check</span>
+          <span class="lf-tag tag-blue">Packing & Labeling</span>
+          <span class="lf-tag tag-amber">Pelunasan 50%</span>
+          <span class="lf-tag tag-emerald">Pengiriman ke Customer</span>
+          <span class="lf-tag tag-emerald">✅ Order Selesai</span>
+        </div>
+        <div style="margin-top:12px;background:var(--blue-lt);border-radius:10px;padding:14px;font-size:12px;color:var(--blue)">
+          📊 <strong>Tracking Real-time:</strong> Customer dapat monitor setiap tahap produksi dari dashboard. Notifikasi otomatis via WA & Email di setiap milestone.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================== ADMIN FLOW ===================== -->
+<div id="tab-admin" class="page">
+  <div class="page-header">
+    <div class="header-tag">Admin Panel</div>
+    <h1>Alur & Tugas Admin Maklon.id</h1>
+    <p>Semua yang dikelola admin: verifikasi, order management, produk, keuangan, dan laporan</p>
+  </div>
+
+  <div class="linear-flow">
+
+    <div class="lf-row">
+      <div class="lf-dot dot-rose" style="color:white;font-size:14px;font-weight:800">A1</div>
+      <div class="lf-card">
+        <h4>🔐 Admin Login & Dashboard</h4>
+        <div class="sub">Login khusus admin dengan role-based access. Dashboard menampilkan semua aktivitas real-time.</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span class="lf-tag tag-rose">Super Admin</span>
+          <span class="lf-tag tag-rose">Admin Verifikasi</span>
+          <span class="lf-tag tag-rose">Admin Produksi</span>
+          <span class="lf-tag tag-rose">Admin Keuangan</span>
+        </div>
+        <div style="margin-top:10px;background:var(--rose-lt);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--rose)">
+          📊 KPI Dashboard: Total order aktif, pendapatan bulan ini, user pending verifikasi, order terlambat
+        </div>
+      </div>
+    </div>
+    <div class="lf-row"><div class="lf-connector"><div class="line"></div></div><div style="flex:1"></div></div>
+
+    <div class="lf-row">
+      <div class="lf-dot dot-rose" style="color:white;font-size:14px;font-weight:800">A2</div>
+      <div class="lf-card">
+        <h4>✅ Verifikasi Legalitas User</h4>
+        <div class="sub">Admin mereview dokumen legalitas yang diupload customer</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px">
+          <div style="background:var(--am-lt);border-radius:9px;padding:12px;font-size:12px">
+            <div style="font-weight:800;color:#92400E;margin-bottom:4px">⏳ Pending Review</div>
+            <div style="color:#A16207">Dokumen baru masuk, belum ditinjau. Notifikasi otomatis ke admin.</div>
+          </div>
+          <div style="background:var(--em-lt);border-radius:9px;padding:12px;font-size:12px">
+            <div style="font-weight:800;color:#065F46;margin-bottom:4px">✅ Setujui & Aktifkan</div>
+            <div style="color:#047857">Verifikasi lulus → akun customer terbuka untuk order. Notif WA/Email ke user.</div>
+          </div>
+          <div style="background:var(--rose-lt);border-radius:9px;padding:12px;font-size:12px">
+            <div style="font-weight:800;color:var(--rose);margin-bottom:4px">❌ Tolak & Beri Catatan</div>
+            <div style="color:#9F1239">Dokumen tidak valid → kirim alasan penolakan & minta upload ulang.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="lf-row"><div class="lf-connector"><div class="line"></div></div><div style="flex:1"></div></div>
+
+    <div class="lf-row">
+      <div class="lf-dot dot-rose" style="color:white;font-size:14px;font-weight:800">A3</div>
+      <div class="lf-card">
+        <h4>📄 Verifikasi MOU (Memorandum of Understanding)</h4>
+        <div class="sub">Admin review dan approve MOU yang diupload customer sebelum pembayaran DP</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px">
+          <div style="background:var(--am-lt);border-radius:9px;padding:12px;font-size:12px">
+            <div style="font-weight:800;color:#92400E;margin-bottom:4px">⏳ MOU Pending Review</div>
+            <div style="color:#A16207">MOU sudah diupload customer, belum direview. Cek kelengkapan tanda tangan & materai.</div>
+          </div>
+          <div style="background:var(--em-lt);border-radius:9px;padding:12px;font-size:12px">
+            <div style="font-weight:800;color:#065F46;margin-bottom:4px">✅ Approve MOU</div>
+            <div style="color:#047857">TTD valid, materai ada → Approve. Order terbuka untuk pembayaran DP. Notif ke customer.</div>
+          </div>
+          <div style="background:var(--rose-lt);border-radius:9px;padding:12px;font-size:12px">
+            <div style="font-weight:800;color:var(--rose);margin-bottom:4px">❌ Reject MOU</div>
+            <div style="color:#9F1239">TTD tidak jelas, materai kurang → Reject dengan catatan. Customer upload ulang.</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;background:var(--vi-lt);border-radius:9px;padding:12px;font-size:12px;color:var(--violet)">
+          📋 <strong>Checklist verifikasi MOU:</strong> Tanda tangan customer ada? Materai Rp 10.000 ada? File jelas & terbaca? Nama sesuai dengan data PT? Tanggal TTD valid?
+        </div>
+      </div>
+    </div>
+    <div class="lf-row"><div class="lf-connector"><div class="line"></div></div><div style="flex:1"></div></div>
+
+    <div class="lf-row">
+      <div class="lf-dot dot-rose" style="color:white;font-size:14px;font-weight:800">A4</div>
+      <div class="lf-card">
+        <h4>📦 Manajemen Order</h4>
+        <div class="sub">Kelola semua order dari submission hingga pengiriman</div>
+        <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+          <div class="fstep"><div class="fstep-icon">📥</div><div class="fstep-body"><div class="fstep-title">Terima Order Baru</div><div class="fstep-desc">Review spesifikasi produk, bahan, kemasan. Konfirmasi feasibility produksi.</div></div></div>
+          <div class="fstep"><div class="fstep-icon">💳</div><div class="fstep-body"><div class="fstep-title">Konfirmasi Pembayaran DP</div><div class="fstep-desc">Verifikasi transfer DP 50% sebelum menginstruksikan tim produksi untuk mulai.</div></div></div>
+          <div class="fstep"><div class="fstep-icon">🏭</div><div class="fstep-body"><div class="fstep-title">Update Status Produksi</div><div class="fstep-desc">Update real-time: Antri Produksi → Mixing → QC → Packing → Siap Kirim</div></div></div>
+          <div class="fstep"><div class="fstep-icon">📦</div><div class="fstep-body"><div class="fstep-title">Proses Pengiriman</div><div class="fstep-desc">Input resi, update tracking. Notifikasi otomatis ke customer via WA & email.</div></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="lf-row"><div class="lf-connector"><div class="line"></div></div><div style="flex:1"></div></div>
+
+    <div class="lf-row">
+      <div class="lf-dot dot-rose" style="color:white;font-size:14px;font-weight:800">A5</div>
+      <div class="lf-card">
+        <h4>🧴 Manajemen Master Data Produk & Material</h4>
+        <div class="sub">CRUD penuh untuk katalog produk dan daftar bahan baku</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+          <div style="background:var(--gray-50);border-radius:9px;padding:12px;font-size:12px">
+            <div style="font-weight:700;color:var(--navy);margin-bottom:6px">📋 Kelola Kategori & Produk</div>
+            <div style="color:var(--gray-500);line-height:1.8">• Tambah/edit/hapus kategori Level 1–4<br>• Update base price per 100ml<br>• Enable/disable produk tertentu<br>• Import dari Excel</div>
+          </div>
+          <div style="background:var(--gray-50);border-radius:9px;padding:12px;font-size:12px">
+            <div style="font-weight:700;color:var(--navy);margin-bottom:6px">🧪 Kelola Material Add-on</div>
+            <div style="color:var(--gray-500);line-height:1.8">• Tambah bahan baru (nama, jenis, harga/ml)<br>• Update harga real-time dari supplier<br>• Set stok availability<br>• Import Excel massal</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="lf-row"><div class="lf-connector"><div class="line"></div></div><div style="flex:1"></div></div>
+
+    <div class="lf-row">
+      <div class="lf-dot dot-rose" style="color:white;font-size:14px;font-weight:800">A6</div>
+      <div class="lf-card">
+        <h4>💰 Manajemen Keuangan & Invoice</h4>
+        <div class="sub">Pantau semua transaksi, pembayaran, dan outstanding invoice</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span class="lf-tag tag-rose">Konfirmasi Pembayaran Manual</span>
+          <span class="lf-tag tag-amber">Invoice Pending List</span>
+          <span class="lf-tag tag-emerald">History Pembayaran</span>
+          <span class="lf-tag tag-blue">Export Laporan Keuangan</span>
+          <span class="lf-tag tag-navy">Rekap Bulanan</span>
+        </div>
+      </div>
+    </div>
+    <div class="lf-row"><div class="lf-connector"><div class="line"></div></div><div style="flex:1"></div></div>
+
+    <div class="lf-row">
+      <div class="lf-dot dot-rose" style="color:white;font-size:14px;font-weight:800">A7</div>
+      <div class="lf-card">
+        <h4>👥 Manajemen User & Notifikasi</h4>
+        <div class="sub">Kelola akun customer, hak akses, dan komunikasi</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          <span class="lf-tag tag-rose">List Semua User</span>
+          <span class="lf-tag tag-amber">User Pending Verifikasi</span>
+          <span class="lf-tag tag-blue">User Terverifikasi Aktif</span>
+          <span class="lf-tag tag-navy">Suspend / Aktifkan Akun</span>
+          <span class="lf-tag tag-violet">Kirim Notifikasi WA/Email</span>
+          <span class="lf-tag tag-emerald">Export Data User</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===================== MENU STRUCTURE ===================== -->
+<div id="tab-menu" class="page">
+  <div class="page-header">
+    <div class="header-tag">Menu Architecture</div>
+    <h1>Struktur Menu Admin & User</h1>
+    <p>Arsitektur menu lengkap beserta fitur dan akses level masing-masing role</p>
+  </div>
+
+  <div class="menu-grid">
+
+    <!-- ADMIN PANEL -->
+    <div class="menu-panel admin-panel">
+      <h2>🛡️ Admin Panel</h2>
+      <span class="role-badge role-admin">Role: Admin / Super Admin</span>
+
+      <div class="menu-section">
+        <div class="menu-section-title">Dashboard & Monitoring</div>
+        <div class="menu-item"><div class="menu-item-icon">📊</div><div class="menu-item-body"><div class="title">Overview Dashboard</div><div class="desc">KPI utama, grafik pendapatan, aktivitas terbaru, alert penting</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">🔔</div><div class="menu-item-body"><div class="title">Notifikasi & Alert</div><div class="desc">Verifikasi baru masuk, pembayaran pending, order terlambat</div></div><span class="menu-item-badge mb-important">Live</span></div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-section-title">Verifikasi User</div>
+        <div class="menu-item"><div class="menu-item-icon">⏳</div><div class="menu-item-body"><div class="title">Antrian Verifikasi</div><div class="desc">Daftar user yang upload dokumen legalitas, belum ditinjau</div></div><span class="menu-item-badge mb-pending">Pending</span></div>
+        <div class="menu-item"><div class="menu-item-icon">✅</div><div class="menu-item-body"><div class="title">Review Dokumen</div><div class="desc">Buka dokumen user, setujui atau tolak dengan catatan alasan</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">📋</div><div class="menu-item-body"><div class="title">History Verifikasi</div><div class="desc">Log semua verifikasi yang sudah diproses beserta catatan</div></div></div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-section-title">Verifikasi MOU</div>
+        <div class="menu-item"><div class="menu-item-icon">📄</div><div class="menu-item-body"><div class="title">MOU Pending Review</div><div class="desc">MOU yang sudah diupload customer, menunggu approval admin</div></div><span class="menu-item-badge mb-pending">Action</span></div>
+        <div class="menu-item"><div class="menu-item-icon">✅</div><div class="menu-item-body"><div class="title">Approve / Reject MOU</div><div class="desc">Review tanda tangan & materai. Approve untuk unlock payment atau reject untuk upload ulang</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">📁</div><div class="menu-item-body"><div class="title">History MOU</div><div class="desc">Log semua MOU yang sudah diproses: approved, rejected, reason</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">📋</div><div class="menu-item-body"><div class="title">Template MOU</div><div class="desc">Edit template MOU auto-generate. Variables: {nama_produk}, {harga}, {timeline}</div></div></div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-section-title">Manajemen Order</div>
+        <div class="menu-item"><div class="menu-item-icon">📥</div><div class="menu-item-body"><div class="title">Order Masuk</div><div class="desc">Order baru yang perlu dikonfirmasi feasibility & harga final</div></div><span class="menu-item-badge mb-new">Baru</span></div>
+        <div class="menu-item"><div class="menu-item-icon">🏭</div><div class="menu-item-body"><div class="title">Order Aktif</div><div class="desc">Semua order dalam proses produksi. Update status & tracking.</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">✅</div><div class="menu-item-body"><div class="title">Order Selesai</div><div class="desc">History order yang sudah dikirim dan dilunasi</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">📊</div><div class="menu-item-body"><div class="title">Update Tracking Produksi</div><div class="desc">Input milestone produksi: Mixing → QC → Packing → Kirim</div></div></div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-section-title">Master Data</div>
+        <div class="menu-item"><div class="menu-item-icon">🗂️</div><div class="menu-item-body"><div class="title">Kelola Kategori Produk</div><div class="desc">CRUD 4-level kategori. Baby/Personal/Makeup/Mom/Men/Perfume/Home</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">🧪</div><div class="menu-item-body"><div class="title">Kelola Bahan Baku</div><div class="desc">140+ bahan: nama, jenis (Extract/Oil/Active/Perfume), harga/ml</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">📦</div><div class="menu-item-body"><div class="title">Kelola Jenis Kemasan</div><div class="desc">Pump, Fliptop, Spray, Jar, dll. Set harga per kemasan.</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">⚖️</div><div class="menu-item-body"><div class="title">Kelola Paket Legalitas</div><div class="desc">Paket PT Perorangan, PT Perseroan, + add-on BPOM & Halal</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">⬆️</div><div class="menu-item-body"><div class="title">Import Excel Massal</div><div class="desc">Upload file Excel untuk update produk & bahan sekaligus</div></div><span class="menu-item-badge mb-new">Excel</span></div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-section-title">Keuangan</div>
+        <div class="menu-item"><div class="menu-item-icon">💳</div><div class="menu-item-body"><div class="title">Konfirmasi Pembayaran</div><div class="desc">Verifikasi bukti transfer DP & pelunasan dari customer</div></div><span class="menu-item-badge mb-pending">Action</span></div>
+        <div class="menu-item"><div class="menu-item-icon">🧾</div><div class="menu-item-body"><div class="title">Semua Invoice</div><div class="desc">List invoice: draft, pending, lunas, overdue</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">📈</div><div class="menu-item-body"><div class="title">Laporan Keuangan</div><div class="desc">Revenue per bulan, outstanding invoice, pendapatan per kategori</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">⬇️</div><div class="menu-item-body"><div class="title">Export Laporan</div><div class="desc">Ekspor ke Excel/PDF: laporan bulanan, tahunan, per customer</div></div></div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-section-title">Kelola User</div>
+        <div class="menu-item"><div class="menu-item-icon">👥</div><div class="menu-item-body"><div class="title">Daftar Semua User</div><div class="desc">List customer dengan status verifikasi, total order, dan value</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">🔒</div><div class="menu-item-body"><div class="title">Suspend / Aktifkan Akun</div><div class="desc">Nonaktifkan akun bermasalah atau aktifkan kembali</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">📣</div><div class="menu-item-body"><div class="title">Broadcast Notifikasi</div><div class="desc">Kirim email/WA massal ke semua user atau segmen tertentu</div></div></div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-section-title">Pengaturan Sistem</div>
+        <div class="menu-item"><div class="menu-item-icon">⚙️</div><div class="menu-item-body"><div class="title">Pengaturan General</div><div class="desc">Min. order, terms pembayaran, info perusahaan, PPN rate</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">👤</div><div class="menu-item-body"><div class="title">Kelola Admin Accounts</div><div class="desc">Tambah admin baru, set role & permissions</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">📜</div><div class="menu-item-body"><div class="title">Audit Log</div><div class="desc">Semua aktivitas admin tercatat: siapa, apa, kapan</div></div></div>
+      </div>
+    </div>
+
+    <!-- USER PANEL -->
+    <div class="menu-panel user-panel">
+      <h2>👤 Customer Panel</h2>
+      <span class="role-badge role-user">Role: Customer (Verified)</span>
+
+      <div class="menu-section">
+        <div class="menu-section-title">Dashboard</div>
+        <div class="menu-item"><div class="menu-item-icon">📊</div><div class="menu-item-body"><div class="title">Overview</div><div class="desc">Total order, order aktif, invoice pending, grafik aktivitas</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">🔔</div><div class="menu-item-body"><div class="title">Notifikasi</div><div class="desc">Update status order, reminder pembayaran, info baru dari admin</div></div></div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-section-title">Order</div>
+        <div class="menu-item"><div class="menu-item-icon">➕</div><div class="menu-item-body"><div class="title">Buat Order Baru</div><div class="desc">Multi-step form: Legal → Kategori → Material → Volume → Kemasan → Desain → Review</div></div><span class="menu-item-badge mb-new">🔓 Verified Only</span></div>
+        <div class="menu-item"><div class="menu-item-icon">📦</div><div class="menu-item-body"><div class="title">Order Saya</div><div class="desc">Semua order: aktif, selesai, dibatalkan. Filter & search.</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">🔍</div><div class="menu-item-body"><div class="title">Detail Order</div><div class="desc">Spesifikasi lengkap, timeline produksi, dokumen terkait</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">📋</div><div class="menu-item-body"><div class="title">Duplikasi Order</div><div class="desc">Buat order baru dengan spesifikasi yang sama dengan order sebelumnya</div></div></div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-section-title">Tracking Produksi</div>
+        <div class="menu-item"><div class="menu-item-icon">🔄</div><div class="menu-item-body"><div class="title">Status Produksi Real-time</div><div class="desc">Timeline visual: Konfirmasi → Mixing → QC → Packing → Pengiriman</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">🚚</div><div class="menu-item-body"><div class="title">Tracking Pengiriman</div><div class="desc">Nomor resi, kurir, estimasi tiba, link tracking eksternal</div></div></div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-section-title">Invoice & Pembayaran</div>
+        <div class="menu-item"><div class="menu-item-icon">🧾</div><div class="menu-item-body"><div class="title">Daftar Invoice</div><div class="desc">Semua invoice dengan badge status: Pending DP / Diproses / Lunas</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">💳</div><div class="menu-item-body"><div class="title">Bayar DP (50%)</div><div class="desc">Upload bukti transfer atau bayar via payment gateway</div></div><span class="menu-item-badge mb-important">Action</span></div>
+        <div class="menu-item"><div class="menu-item-icon">💰</div><div class="menu-item-body"><div class="title">Bayar Pelunasan (50%)</div><div class="desc">Tersedia setelah produk selesai & siap kirim</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">⬇️</div><div class="menu-item-body"><div class="title">Download Invoice PDF</div><div class="desc">Invoice resmi bertanda tangan digital untuk keperluan akuntansi</div></div></div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-section-title">MOU (Memorandum of Understanding)</div>
+        <div class="menu-item"><div class="menu-item-icon">📄</div><div class="menu-item-body"><div class="title">Download MOU</div><div class="desc">Download MOU auto-generated setelah order dikonfirmasi. TTD di atas materai Rp 10.000</div></div><span class="menu-item-badge mb-new">PDF</span></div>
+        <div class="menu-item"><div class="menu-item-icon">⬆️</div><div class="menu-item-body"><div class="title">Upload MOU Signed</div><div class="desc">Upload MOU yang sudah ditandatangani & bermaterai (PDF/JPG, max 5MB)</div></div><span class="menu-item-badge mb-important">Required</span></div>
+        <div class="menu-item"><div class="menu-item-icon">⏳</div><div class="menu-item-body"><div class="title">Status MOU</div><div class="desc">Cek status: Belum Upload / Pending Review / Approved / Rejected</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">🔒</div><div class="menu-item-body"><div class="title">Lock Payment Until MOU Approved</div><div class="desc">Pembayaran DP terbuka setelah admin approve MOU yang diupload</div></div></div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-section-title">Legalitas Akun</div>
+        <div class="menu-item"><div class="menu-item-icon">📁</div><div class="menu-item-body"><div class="title">Status Verifikasi</div><div class="desc">Lihat status dokumen legalitas: Pending / Terverifikasi / Ditolak</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">⬆️</div><div class="menu-item-body"><div class="title">Upload/Update Dokumen</div><div class="desc">Upload ulang jika ditolak atau perbarui dokumen yang kadaluarsa</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">⚖️</div><div class="menu-item-body"><div class="title">Paket Legalitas</div><div class="desc">Beli paket pembuatan PT/CV jika belum punya legalitas</div></div></div>
+      </div>
+
+      <div class="menu-section">
+        <div class="menu-section-title">Profil</div>
+        <div class="menu-item"><div class="menu-item-icon">👤</div><div class="menu-item-body"><div class="title">Data Perusahaan</div><div class="desc">Edit nama perusahaan, alamat, kontak, NPWP, nomor rekening</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">🔑</div><div class="menu-item-body"><div class="title">Keamanan Akun</div><div class="desc">Ganti password, aktifkan 2FA, log aktivitas login</div></div></div>
+        <div class="menu-item"><div class="menu-item-icon">📞</div><div class="menu-item-body"><div class="title">Hubungi Support</div><div class="desc">Chat langsung, WhatsApp, atau tiket support</div></div></div>
+      </div>
+
+      <!-- Locked features notice -->
+      <div style="background:var(--rose-lt);border:1.5px dashed var(--rose);border-radius:12px;padding:16px;margin-top:8px">
+        <div style="font-size:13px;font-weight:800;color:var(--rose);margin-bottom:6px">🔒 Fitur Terkunci Sebelum Verifikasi:</div>
+        <div style="font-size:12px;color:#9F1239;line-height:1.8">
+          • Buat Order Baru — terkunci<br>
+          • Invoice & Pembayaran — belum ada data<br>
+          • Tracking Produksi — belum ada order<br>
+          User dapat melihat Dashboard overview tapi tidak bisa melakukan order apapun.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== PRODUCT CATALOG ===================== -->
+<div id="tab-products" class="page">
+  <div class="page-header">
+    <div class="header-tag">Product Database</div>
+    <h1>Katalog Produk dari Excel</h1>
+    <p>177 produk tersedia dalam 7 kategori utama. Base price Rp 10.000/100ml untuk semua produk.</p>
+  </div>
+
+  <div class="catalog-grid">
+    <div class="cat-card" style="border-top-color:#F59E0B">
+      <h3>👶 Baby Care <span class="cat-tag" style="background:#FEF3C7;color:#92400E">13 produk</span></h3>
+      <div class="product-list">
+        <div class="product-item"><span class="product-name">Body Wash</span><span class="product-cat">Cleanser</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Hair Wash / Shampoo</span><span class="product-cat">Cleanser</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Baby Lotion</span><span class="product-cat">Body Care</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Baby Cream</span><span class="product-cat">Body Care</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Baby Oil</span><span class="product-cat">Body Care</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Sunscreen</span><span class="product-cat">Face Care</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Bedak Bayi</span><span class="product-cat">Face Care</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Lip Balm</span><span class="product-cat">Face Care</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">+ 5 produk lainnya</span><span class="product-cat">Hair & Tooth</span><span class="product-price">—</span></div>
+      </div>
+    </div>
+
+    <div class="cat-card" style="border-top-color:#1E6FE8">
+      <h3>🧴 Personal Care <span class="cat-tag" style="background:#DBEAFE;color:#1D4ED8">76 produk</span></h3>
+      <div class="product-list">
+        <div class="product-item"><span class="product-name">Serum Anti Acne / Aging / Vit C</span><span class="product-cat">Face Care</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Facial Wash, Micellar Water</span><span class="product-cat">Cleanser</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Day Cream, Night Cream</span><span class="product-cat">Moisturizer</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Toner, Essence, Ampoule</span><span class="product-cat">Treatment</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Sheet Mask, Clay Mask</span><span class="product-cat">Masker</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Body Lotion, Body Butter, Body Serum</span><span class="product-cat">Body Care</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Shampoo, Conditioner, Hair Serum</span><span class="product-cat">Hair Care</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Deodorant, Feminine Wash, Hand Cream</span><span class="product-cat">Body Care</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">+ 68 produk lainnya</span><span class="product-cat">Semua subkategori</span><span class="product-price">—</span></div>
+      </div>
+    </div>
+
+    <div class="cat-card" style="border-top-color:#7C3AED">
+      <h3>💄 Makeup <span class="cat-tag" style="background:#EDE9FE;color:#7C3AED">11 produk</span></h3>
+      <div class="product-list">
+        <div class="product-item"><span class="product-name">Foundation, Cushion, Setting Spray</span><span class="product-cat">Face Decoration</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Blush On</span><span class="product-cat">Face Decoration</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Lip Matte, Lip Gloss, Lipstick</span><span class="product-cat">Lip Decoration</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Mascara, Eye Brow, Eye Shadow</span><span class="product-cat">Eye Decoration</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Eye Liner</span><span class="product-cat">Eye Decoration</span><span class="product-price">Rp 10.000/100ml</span></div>
+      </div>
+    </div>
+
+    <div class="cat-card" style="border-top-color:#E11D48">
+      <h3>🤱 Mom's Care <span class="cat-tag" style="background:#FFE4E6;color:#E11D48">30 produk</span></h3>
+      <div class="product-list">
+        <div class="product-item"><span class="product-name">Body Wash, Shampoo</span><span class="product-cat">Cleanser</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Body Lotion, Body Cream, Body Oil</span><span class="product-cat">Body Care</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Sunscreen, Serum, Moisturizer</span><span class="product-cat">Face Care</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Stretch Marks Cream, Breast Cream</span><span class="product-cat">Body Treatment</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Feminine Wash, Deodorant</span><span class="product-cat">Underarm & Feminine</span><span class="product-price">Rp 10.000/100ml</span></div>
+      </div>
+    </div>
+
+    <div class="cat-card" style="border-top-color:#0891B2">
+      <h3>👨 Men's Care <span class="cat-tag" style="background:#ECFEFF;color:#0891B2">23 produk</span></h3>
+      <div class="product-list">
+        <div class="product-item"><span class="product-name">Body Wash, Shampoo</span><span class="product-cat">Cleanser</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Face Wash, Serum, Moisturizer</span><span class="product-cat">Face Care</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Pomade, Hair Gel</span><span class="product-cat">Styling & Color</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Shaving Cream</span><span class="product-cat">Others</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Masculine Wash & Spray</span><span class="product-cat">Masculine Care</span><span class="product-price">Rp 10.000/100ml</span></div>
+      </div>
+    </div>
+
+    <div class="cat-card" style="border-top-color:#7C3AED">
+      <h3>🌸 Perfume <span class="cat-tag" style="background:#F3E8FF;color:#7C3AED">5 produk</span></h3>
+      <div class="product-list">
+        <div class="product-item"><span class="product-name">Eau De Perfume</span><span class="product-cat">Perfume</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Eau De Toilette</span><span class="product-cat">Perfume</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Eau De Cologne</span><span class="product-cat">Perfume</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Body Mist</span><span class="product-cat">Perfume</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Extraits Perfume</span><span class="product-cat">Perfume</span><span class="product-price">Rp 10.000/100ml</span></div>
+      </div>
+    </div>
+
+    <div class="cat-card" style="border-top-color:#059669">
+      <h3>🏠 Home Care <span class="cat-tag" style="background:#D1FAE5;color:#065F46">19 produk</span></h3>
+      <div class="product-list">
+        <div class="product-item"><span class="product-name">Kitchen Cleaner, Dishwash, Hand Wash</span><span class="product-cat">Kitchen</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Floor Cleaner, Glass Cleaner, Desinfectant</span><span class="product-cat">House Care</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Room Spray, Room Diffuser</span><span class="product-cat">House Care</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Liquid Detergent, Softener</span><span class="product-cat">Laundry</span><span class="product-price">Rp 10.000/100ml</span></div>
+        <div class="product-item"><span class="product-name">Shoes Cleaner, Shoes Spray</span><span class="product-cat">Shoes Care</span><span class="product-price">Rp 10.000/100ml</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MATERIAL LIST ===================== -->
+<div id="tab-materials" class="page">
+  <div class="page-header">
+    <div class="header-tag">Add-on Materials</div>
+    <h1>Daftar Bahan Baku Add-on</h1>
+    <p>142 bahan tersedia dari data Excel. Harga dalam Rp per ml. Dapat dipilih multiple untuk satu produk.</p>
+  </div>
+
+  <div class="material-filters">
+    <button class="mfilter active" onclick="filterMat('all',this)">Semua (142)</button>
+    <button class="mfilter" onclick="filterMat('Extract',this)">🌿 Extract (27)</button>
+    <button class="mfilter" onclick="filterMat('Oil',this)">💧 Oil (23)</button>
+    <button class="mfilter" onclick="filterMat('Active',this)">⚗️ Active (35)</button>
+    <button class="mfilter" onclick="filterMat('Perfume',this)">🌸 Parfum (57)</button>
+    <button class="mfilter" onclick="filterMat('Custom',this)" style="background:var(--gray-100);color:var(--gray-500)">+ Kategori Lain (editable)</button>
+  </div>
+
+  <div style="background:var(--blue-lt);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:12px;color:var(--blue)">
+    ℹ️ <strong>Admin dapat menambah kategori baru</strong> (Pewarna, Pengawet, Emulsifier, dll) sesuai kebutuhan ekspansi produk
+  </div>
+
+  <table class="mat-table" id="matTable">
+    <thead><tr><th>Nama Bahan</th><th>Jenis</th><th>Deskripsi</th><th>Harga/ml (Rp)</th><th>Estimasi per 1000 pcs (5ml/produk)</th></tr></thead>
+    <tbody id="matBody"></tbody>
+  </table>
+</div>
+
+<!-- ===================== PRICING LOGIC ===================== -->
+<div id="tab-pricing" class="page">
+  <div class="page-header">
+    <div class="header-tag">Pricing Formula</div>
+    <h1>Logika Kalkulasi Harga</h1>
+    <p>Formula lengkap dari Excel data untuk menghitung total biaya order customer</p>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+    <div>
+      <div class="db-card" style="background:white;border-radius:16px;padding:28px;box-shadow:var(--shadow)">
+        <h3 style="font-size:18px;font-weight:800;color:var(--navy);margin-bottom:20px">📐 Formula Kalkulasi</h3>
+
+        <div style="background:var(--gray-50);border-radius:12px;padding:20px;font-family:monospace;font-size:13px;color:var(--navy);line-height:2.2;border:1px solid var(--gray-200)">
+          <div style="color:var(--gray-400);font-size:11px;margin-bottom:4px">// BIAYA LEGALITAS (100% upfront)</div>
+          <div><span style="color:var(--violet)">legal_cost</span> = PT + BPOM + Halal + Logo + HKI</div>
+          <div style="border-top:1px dashed var(--gray-200);margin:8px 0;padding-top:8px"></div>
+          
+          <div style="color:var(--gray-400);font-size:11px;margin-bottom:4px">// BIAYA PRODUK (Base price bervariasi per produk)</div>
+          <div><span style="color:var(--blue)">base_cost</span> = harga_base_produk × qty</div>
+          <div><span style="color:var(--emerald)">material_cost</span> = Σ(harga_bahan/ml × dosis_ml × qty)</div>
+          <div><span style="color:var(--amber)">packaging_cost</span> = harga_kemasan × qty</div>
+          <div><span style="color:var(--rose)">design_cost</span> = Rp 750.000 (jika dipilih)</div>
+          <div><span style="color:var(--cyan)">sample_cost</span> = Rp 500.000 (jika request)</div>
+          <div style="border-top:1px dashed var(--gray-200);margin-top:6px;padding-top:6px">
+          <span style="color:var(--gray-600)">subtotal_produk</span> = base + material + packaging + design + sample</div>
+          <div><span style="color:var(--gray-600)">ppn</span> = (subtotal_produk + legal_cost) × 11%</div>
+          <div style="font-weight:800;color:var(--navy);margin-top:8px">TOTAL = subtotal_produk + legal_cost + ppn</div>
+          <div style="border-top:2px solid var(--amber);margin-top:8px;padding-top:8px;color:var(--amber)">PEMBAYARAN 1 = legal_cost + sample_cost + (subtotal_produk × 50%) + ppn</div>
+          <div style="color:var(--emerald);margin-top:4px">PEMBAYARAN 2 = subtotal_produk × 50%</div>
+        </div>
+        
+        <div style="margin-top:16px;background:#F3E8FF;border-radius:12px;padding:16px">
+          <div style="font-size:12px;font-weight:700;color:var(--violet);margin-bottom:8px">💡 Catatan Penting:</div>
+          <div style="font-size:11px;color:#5B21B6;line-height:1.8">
+            • <strong>Legalitas dibayar 100%</strong> (PT, BPOM, Halal) pada pembayaran pertama<br>
+            • <strong>Sample dibayar 100%</strong> jika customer request sample<br>
+            • <strong>Produk dibayar 50% DP</strong> (base + material + packaging + design)<br>
+            • <strong>Base price</strong> tidak flat Rp 10rb/100ml, bervariasi per produk<br>
+            • <strong>Kemasan</strong> punya katalog dengan harga berbeda per pilihan<br>
+            • <strong>Sisa 50%</strong> dibayar setelah produk jadi & siap kirim
+          </div>
+        </div>
+      </div>
+
+      <div style="background:white;border-radius:16px;padding:28px;box-shadow:var(--shadow);margin-top:20px">
+        <h3 style="font-size:18px;font-weight:800;color:var(--navy);margin-bottom:16px">⚖️ Tabel Biaya Legal</h3>
+        <table class="mat-table">
+          <thead><tr><th>Item</th><th>Opsi</th><th>Harga</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Pendirian PT</td><td>Perorangan</td><td>Rp 1.500.000</td><td><span style="background:#FEF3C7;color:#92400E;font-size:11px;padding:2px 8px;border-radius:100px">Opsional</span></td></tr>
+            <tr><td>Pendirian PT</td><td>Perseroan</td><td>Rp 5.000.000</td><td><span style="background:#FEF3C7;color:#92400E;font-size:11px;padding:2px 8px;border-radius:100px">Opsional</span></td></tr>
+            <tr><td>Logo & Hak Merk</td><td>Pembuatan + Cek</td><td>Rp 1.500.000</td><td><span style="background:#FEF3C7;color:#92400E;font-size:11px;padding:2px 8px;border-radius:100px">Jika HAKI</span></td></tr>
+            <tr><td>Pendaftaran Merk</td><td>Per kelas DJKI</td><td>Rp 2.750.000</td><td><span style="background:#FEF3C7;color:#92400E;font-size:11px;padding:2px 8px;border-radius:100px">Jika HAKI</span></td></tr>
+            <tr><td>Izin Edar BPOM</td><td>—</td><td>Rp 1.250.000</td><td><span style="background:#FEE2E2;color:#991B1B;font-size:11px;padding:2px 8px;border-radius:100px;font-weight:800">⚠️ WAJIB</span></td></tr>
+            <tr><td>Sertifikasi Halal</td><td>—</td><td>Rp 2.500.000</td><td><span style="background:#FEF3C7;color:#92400E;font-size:11px;padding:2px 8px;border-radius:100px">Opsional</span></td></tr>
+            <tr><td>Desain Sticker</td><td>—</td><td>Rp 750.000</td><td><span style="background:#FEF3C7;color:#92400E;font-size:11px;padding:2px 8px;border-radius:100px">Opsional</span></td></tr>
+            <tr><td>Request Sample</td><td>Max 2x revisi</td><td>Rp 500.000</td><td><span style="background:#ECFEFF;color:#0891B2;font-size:11px;padding:2px 8px;border-radius:100px">Opsional</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <div style="background:white;border-radius:16px;padding:28px;box-shadow:var(--shadow);margin-bottom:20px">
+        <h3 style="font-size:18px;font-weight:800;color:var(--navy);margin-bottom:16px">🧮 Contoh Kalkulasi Nyata</h3>
+        <div style="background:var(--gray-50);border-radius:10px;padding:16px;font-size:13px">
+          <div style="font-weight:800;color:var(--navy);margin-bottom:12px">Produk: Serum Vit C 30ml — 1000 pcs (dengan PT Perorangan & Sample)</div>
+          
+          <div style="background:var(--vi-lt);border-radius:8px;padding:10px;margin-bottom:8px">
+            <div style="font-weight:800;color:var(--violet);margin-bottom:6px">A. LEGALITAS (100%)</div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #C4B5FD"><span>PT Perorangan</span><span style="font-weight:700">Rp 1.500.000</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #C4B5FD"><span>Izin Edar BPOM (wajib)</span><span style="font-weight:700">Rp 1.250.000</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #C4B5FD"><span>Halal Certification</span><span style="font-weight:700">Rp 2.500.000</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;font-weight:800;color:var(--violet)"><span>Subtotal Legalitas</span><span>Rp 5.250.000</span></div>
+          </div>
+          
+          <div style="background:var(--blue-lt);border-radius:8px;padding:10px;margin-bottom:8px">
+            <div style="font-weight:800;color:var(--blue);margin-bottom:6px">B. PRODUK (DP 50%)</div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #BFDBFE"><span>Base formula (custom price)</span><span style="font-weight:700">Rp 3.000.000</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #BFDBFE"><span>Vit C + Ceramide (add-on)</span><span style="font-weight:700">Rp 2.201.000</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #BFDBFE"><span>Kemasan Botol Pump 30ml</span><span style="font-weight:700">Rp 500.000</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px dashed #BFDBFE"><span>Desain Sticker</span><span style="font-weight:700">Rp 750.000</span></div>
+            <div style="display:flex;justify-content:space-between;padding:4px 0;font-weight:800;color:var(--blue)"><span>Subtotal Produk</span><span>Rp 6.451.000</span></div>
+          </div>
+          
+          <div style="background:var(--cyan);color:white;border-radius:8px;padding:10px;margin-bottom:8px">
+            <div style="display:flex;justify-content:space-between;padding:4px 0;font-weight:800"><span>C. SAMPLE (100%)</span><span>Rp 500.000</span></div>
+          </div>
+          
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:2px solid var(--gray-200)"><span>PPN 11% (dari semua)</span><span style="font-weight:700">Rp 1.342.110</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:16px;font-weight:800;color:var(--navy)"><span>GRAND TOTAL</span><span>Rp 13.543.110</span></div>
+          
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+            <div style="background:var(--amber);color:white;border-radius:8px;padding:14px">
+              <div style="font-size:11px;font-weight:700;opacity:0.9;margin-bottom:4px">💰 PEMBAYARAN 1</div>
+              <div style="font-size:11px;opacity:0.9;line-height:1.6">
+                Legalitas: Rp 5.250.000<br>
+                Sample: Rp 500.000<br>
+                DP Produk 50%: Rp 3.225.500<br>
+                PPN: Rp 1.342.110
+              </div>
+              <div style="font-size:20px;font-weight:800;margin-top:6px">Rp 10.317.610</div>
+            </div>
+            <div style="background:var(--emerald);color:white;border-radius:8px;padding:14px">
+              <div style="font-size:11px;font-weight:700;opacity:0.9;margin-bottom:4px">✅ PELUNASAN (50%)</div>
+              <div style="font-size:11px;opacity:0.9;line-height:1.6">
+                Sisa Produk 50%<br>
+                Dibayar setelah QC passed<br>
+                & siap kirim
+              </div>
+              <div style="font-size:20px;font-weight:800;margin-top:6px">Rp 3.225.500</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:16px;padding:28px;color:white">
+        <h3 style="font-size:18px;font-weight:800;margin-bottom:16px">📋 Ringkasan Komponen Biaya</h3>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.1);border-radius:8px;padding:12px 14px"><span style="font-size:13px;opacity:.9">Base Formula (wajib)</span><span style="font-weight:700;color:#93C5FD">Bervariasi per produk</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.1);border-radius:8px;padding:12px 14px"><span style="font-size:13px;opacity:.9">Add-on Material (opsional)</span><span style="font-weight:700;color:#6EE7B7">Rp 48 – Rp 15.689/ml</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.1);border-radius:8px;padding:12px 14px"><span style="font-size:13px;opacity:.9">Kemasan (wajib)</span><span style="font-weight:700;color:#C4B5FD">Lihat katalog gambar</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.1);border-radius:8px;padding:12px 14px"><span style="font-size:13px;opacity:.9">Izin BPOM (wajib)</span><span style="font-weight:700;color:#FCA5A5">Rp 1.250.000 (100%)</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.1);border-radius:8px;padding:12px 14px"><span style="font-size:13px;opacity:.9">Halal Cert (opsional)</span><span style="font-weight:700;color:#FCD34D">Rp 2.500.000 (100%)</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.1);border-radius:8px;padding:12px 14px"><span style="font-size:13px;opacity:.9">PT Legalitas (opsional)</span><span style="font-weight:700;color:#FCD34D">Rp 1,5jt - 5jt (100%)</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.1);border-radius:8px;padding:12px 14px"><span style="font-size:13px;opacity:.9">Desain Sticker (opsional)</span><span style="font-weight:700;color:#FCD34D">Rp 750.000</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.1);border-radius:8px;padding:12px 14px"><span style="font-size:13px;opacity:.9">Request Sample (opsional)</span><span style="font-weight:700;color:#A5F3FC">Rp 500.000 (100%)</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(30,111,232,.4);border-radius:8px;padding:12px 14px;border:1px solid rgba(30,111,232,.5)"><span style="font-size:13px;font-weight:700">PPN</span><span style="font-weight:700;color:white">11% dari total</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(245,158,11,.3);border-radius:8px;padding:12px 14px;border:1px solid rgba(245,158,11,.4)"><span style="font-size:14px;font-weight:800">Minimum Order</span><span style="font-weight:800;color:#FCD34D;font-size:16px">100 pcs</span></div>
+        </div>
+        <div style="margin-top:14px;background:rgba(124,58,237,.2);border-radius:8px;padding:12px;font-size:11px;line-height:1.7;border:1px solid rgba(124,58,237,.3)">
+          💡 <strong>Catatan:</strong> Legalitas & Sample dibayar 100% di awal. Produk dibayar DP 50%, sisa 50% setelah jadi.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// All material data from Excel
+const materials = [
+  {name:'Albae Extract',type:'Extract',price:520,desc:'Extract dari rumput laut, kaya antioksidan'},
+  {name:'Almond Oil',type:'Oil',price:210,desc:'Minyak almond untuk melembabkan dan melembutkan kulit'},
+  {name:'Aloe Vera Extract',type:'Extract',price:160.95,desc:'Gel lidah buaya, menenangkan & melembabkan kulit sensitif'},
+  {name:'Anise Oil',type:'Oil',price:830.64,desc:'Minyak adas untuk aromaterapi'},
+  {name:'Arrowroot',type:'Extract',price:52,desc:'Bubuk tanaman untuk tekstur halus dan matte'},
+  {name:'Biotin',type:'Active',price:15689.95,desc:'Vitamin B7 untuk pertumbuhan rambut dan kuku'},
+  {name:'Cajuput Oil',type:'Oil',price:230,desc:'Minyak kayu putih antiseptik'},
+  {name:'Calamine Bubuk',type:'Active',price:122.88,desc:'Bubuk mineral untuk menenangkan iritasi kulit'},
+  {name:'Ceramide',type:'Active',price:1402.68,desc:'Lipid barrier untuk skin hydration & anti-aging'},
+  {name:'Coconut Oil',type:'Oil',price:57.72,desc:'Minyak kelapa murni, melembabkan rambut & kulit'},
+  {name:'Castor Oil',type:'Oil',price:59.1,desc:'Minyak jarak untuk rambut dan alis'},
+  {name:'Enzyme Protease',type:'Active',price:1000,desc:'Enzim untuk exfoliasi lembut'},
+  {name:'Ethylhexy Methoxy',type:'Active',price:325,desc:'UV filter untuk sunscreen'},
+  {name:'Eucalyptus Essential Oil',type:'Oil',price:610,desc:'Minyak esensial untuk pernapasan'},
+  {name:'Fish Collagen',type:'Active',price:430,desc:'Kolagen ikan untuk elastisitas kulit'},
+  {name:'Gingseng Extract',type:'Extract',price:444,desc:'Extract ginseng untuk revitalisasi kulit'},
+  {name:'Glycolic Acid',type:'Active',price:156.1,desc:'AHA untuk exfoliasi dan brightening'},
+  {name:'Goat Milk Extract',type:'Extract',price:410,desc:'Extract susu kambing untuk kulit lembut'},
+  {name:'Grapefruit Essential Oil',type:'Oil',price:1441.24,desc:'Minyak esensial citrus segar'},
+  {name:'Habbatusauda Oil',type:'Oil',price:262.6,desc:'Minyak jintan hitam untuk kesehatan kulit'},
+  {name:'Honey Extract',type:'Extract',price:377.4,desc:'Extract madu untuk moisturizer alami'},
+  {name:'Hydrolyzed Soy',type:'Extract',price:1075,desc:'Protein kedelai untuk firming'},
+  {name:'Kojic Acid',type:'Active',price:454.4,desc:'Whitening agent untuk flek hitam'},
+  {name:'Kojic Acid Dipalmitate',type:'Active',price:1300,desc:'Bentuk stable kojic acid untuk brightening'},
+  {name:'Lactic Acid',type:'Active',price:62.3,desc:'AHA gentle untuk exfoliasi kulit sensitif'},
+  {name:'Lavender Essential Oil',type:'Oil',price:1140,desc:'Minyak lavender menenangkan dan aromaterapi'},
+  {name:'Lemon Essential Oil',type:'Oil',price:1335,desc:'Minyak lemon untuk brightening'},
+  {name:'Lemongrass Essential Oil',type:'Oil',price:380,desc:'Minyak sereh untuk aromaterapi fresh'},
+  {name:'Licorice Extract',type:'Extract',price:271.95,desc:'Extract licorice untuk brightening alami'},
+  {name:'Neem Oil',type:'Oil',price:240,desc:'Minyak nimba anti-bacterial'},
+  {name:'OAT COM',type:'Active',price:933.23,desc:'Oat complex untuk soothing kulit'},
+  {name:'Olive Oil',type:'Oil',price:100,desc:'Minyak zaitun extra virgin untuk nutrisi'},
+  {name:'Panthenol',type:'Active',price:313,desc:'Pro-vitamin B5 untuk hidrasi dan healing'},
+  {name:'Peppermint Oil',type:'Oil',price:456.73,desc:'Minyak peppermint cooling effect'},
+  {name:'Salicylic Acid',type:'Active',price:355.4,desc:'BHA untuk acne dan exfoliasi pori'},
+  {name:'Spirulina Powder',type:'Extract',price:146.3,desc:'Bubuk spirulina antioksidan tinggi'},
+  {name:'Tamanu Oil',type:'Oil',price:943.5,desc:'Minyak tamanu untuk scar dan healing'},
+  {name:'Tea Tree Oil',type:'Oil',price:1276.5,desc:'Minyak pohon teh anti-bacterial untuk acne'},
+  {name:'Vitamin E',type:'Active',price:900,desc:'Tocopherol antioksidan untuk anti-aging'},
+  {name:'Zinc Oxide',type:'Active',price:337.79,desc:'Mineral sunscreen SPF booster'},
+  {name:'Allantoin',type:'Active',price:190,desc:'Soothing agent untuk kulit sensitif'},
+  {name:'Gotukola Extract',type:'Extract',price:455.1,desc:'Pegagan untuk wound healing & firming'},
+  {name:'Rosemary Essential Oil',type:'Oil',price:1520,desc:'Minyak rosemary untuk rambut rontok'},
+  {name:'Moringa Extract',type:'Extract',price:440,desc:'Extract kelor antioksidan super'},
+  {name:'Grapeseed Extract',type:'Extract',price:670,desc:'Extract biji anggur anti-aging'},
+  {name:'Ginger Extract',type:'Extract',price:400,desc:'Extract jahe untuk warming effect'},
+  {name:'Coffee Extract',type:'Extract',price:300,desc:'Extract kopi untuk cellulite & scrub'},
+  {name:'Watermelon Extract',type:'Extract',price:410,desc:'Extract semangka hydrating & soothing'},
+  {name:'Avocado Extract',type:'Extract',price:450,desc:'Extract alpukat untuk dry skin'},
+  {name:'Pomegranate Extract',type:'Extract',price:525,desc:'Extract delima antioksidan kuat'},
+  {name:'Mangosteen Extract',type:'Extract',price:375,desc:'Extract manggis anti-inflammatory'},
+  {name:'Rosemary Extract',type:'Extract',price:755,desc:'Extract rosemary untuk scalp health'},
+  {name:'Rosella Extract',type:'Extract',price:450,desc:'Extract rosella untuk brightening'},
+  {name:'Tranexamic Acid',type:'Active',price:2109,desc:'Whitening agent untuk melasma & hiperpigmentasi'},
+  {name:'4D Hyaluronic Acid',type:'Active',price:3283.71,desc:'Multi-molecular HA untuk deep hydration'},
+  {name:'Cranberry Extract',type:'Extract',price:899.1,desc:'Extract cranberry antioksidan & brightening'},
+  {name:'Lemon Extract',type:'Extract',price:1000,desc:'Extract lemon untuk Vitamin C alami'},
+  {name:'Propolis Extract',type:'Extract',price:444,desc:'Extract propolis antibacterial & healing'},
+  {name:'Baby NMF',type:'Active',price:2606.98,desc:'Natural Moisturizing Factor untuk bayi'},
+  {name:'HPDR Solution',type:'Active',price:7011.2,desc:'Hydrolyzed protein untuk repair barrier'},
+  {name:'VertBerry Barrier',type:'Active',price:5913.06,desc:'Berry complex untuk skin barrier'},
+  {name:'Acxosome LactoP',type:'Active',price:7650,desc:'Liposomal delivery untuk penetrasi optimal'},
+  // Perfumes
+  {name:'Parfum Aloe Vera',type:'Perfume',price:1097},{name:'Parfum Baby Powder',type:'Perfume',price:288},{name:'Parfum Baccarat',type:'Perfume',price:255},{name:'Parfum Black Opium',type:'Perfume',price:250},{name:'Parfum Bubble Gum',type:'Perfume',price:150},{name:'Parfum Chamomile',type:'Perfume',price:360},{name:'Parfum Cherry Blossom',type:'Perfume',price:220},{name:'Parfum Chocolate',type:'Perfume',price:250},{name:'Parfum Green Tea',type:'Perfume',price:623},{name:'Parfum Lavender',type:'Perfume',price:160},{name:'Parfum Maple',type:'Perfume',price:220},{name:'Parfum Peach & Magnolia',type:'Perfume',price:2040},{name:'Parfum Pear & Freesia',type:'Perfume',price:250},{name:'Parfum Peony',type:'Perfume',price:600},{name:'Parfum Sakura',type:'Perfume',price:967},{name:'Parfum Sandalwood Rose',type:'Perfume',price:1742.4},{name:'Parfum Strawberry',type:'Perfume',price:120},{name:'Parfum Vanilla',type:'Perfume',price:250},{name:'Parfum Yuzu',type:'Perfume',price:540},{name:'Parfum Spearmint',type:'Perfume',price:3270},{name:'Parfum Lemongrass',type:'Perfume',price:420.69},{name:'Parfum Amber Kiss',type:'Perfume',price:465.56},{name:'Parfum Amethyst',type:'Perfume',price:540.15},{name:'Parfum Dark Jasmine',type:'Perfume',price:464.02},{name:'Parfum Lychee Paradise',type:'Perfume',price:540.05},{name:'Parfum Japanese Blossom',type:'Perfume',price:464.02},{name:'Parfum Coco Breeze',type:'Perfume',price:464.02}
+];
+
+function renderMaterials(filter) {
+  const data = filter === 'all' ? materials : (filter === 'Custom' ? [] : materials.filter(m => m.type === filter));
+  const tbody = document.getElementById('matBody');
+  
+  if (filter === 'Custom') {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--gray-400)">
+      ⚙️ Admin dapat menambah kategori custom seperti: Pewarna, Pengawet, Emulsifier, Thickener, dll
+    </td></tr>`;
+    return;
+  }
+  
+  tbody.innerHTML = data.map(m => {
+    const typeClass = {Extract:'bt-extract',Oil:'bt-oil',Active:'bt-active',Perfume:'bt-perfume'}[m.type];
+    const est = Math.round(m.price * 5 * 1000).toLocaleString('id-ID');
+    const desc = m.desc || '—';
+    return `<tr>
+      <td><strong>${m.name}</strong></td>
+      <td><span class="badge-type ${typeClass}">${m.type}</span></td>
+      <td style="font-size:11px;color:var(--gray-500);max-width:300px">${desc}</td>
+      <td>Rp ${m.price.toLocaleString('id-ID', {maximumFractionDigits:2})}</td>
+      <td>Rp ${est}</td>
+    </tr>`;
+  }).join('');
+}
+
+function filterMat(type, btn) {
+  document.querySelectorAll('.mfilter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderMaterials(type);
+}
+
+function showTab(tab) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// Init
+renderMaterials('all');
+</script>
+</body>
+</html>
