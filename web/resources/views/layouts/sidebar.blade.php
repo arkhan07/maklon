@@ -48,23 +48,23 @@
                 <span class="material-symbols-outlined">dashboard</span>
                 <span class="text-sm font-medium">Overview</span>
             </a>
-            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('orders.create') ? 'bg-white/10 text-white' : 'text-white/60 hover:bg-white/5 hover:text-white' }} transition-colors" href="#">
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('orders.create') ? 'bg-white/10 text-white' : 'text-white/60 hover:bg-white/5 hover:text-white' }} transition-colors" href="{{ route('orders.create') }}">
                 <span class="material-symbols-outlined">add_circle</span>
                 <span class="text-sm font-medium">Buat Order Baru</span>
             </a>
-            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('orders.index') ? 'bg-white/10 text-white' : 'text-white/60 hover:bg-white/5 hover:text-white' }} transition-colors" href="#">
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('orders.index','orders.show') ? 'bg-white/10 text-white' : 'text-white/60 hover:bg-white/5 hover:text-white' }} transition-colors" href="{{ route('orders.index') }}">
                 <span class="material-symbols-outlined">package_2</span>
                 <span class="text-sm font-medium">Order Saya</span>
             </a>
-            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('invoices.*') ? 'bg-white/10 text-white' : 'text-white/60 hover:bg-white/5 hover:text-white' }} transition-colors" href="{{ route('invoices.index') }}">
                 <span class="material-symbols-outlined">description</span>
                 <span class="text-sm font-medium">Invoice</span>
             </a>
-            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('payments.*') ? 'bg-white/10 text-white' : 'text-white/60 hover:bg-white/5 hover:text-white' }} transition-colors" href="{{ route('payments.index') }}">
                 <span class="material-symbols-outlined">payments</span>
                 <span class="text-sm font-medium">Pembayaran</span>
             </a>
-            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('tracking.*') ? 'bg-white/10 text-white' : 'text-white/60 hover:bg-white/5 hover:text-white' }} transition-colors" href="{{ route('tracking.index') }}">
                 <span class="material-symbols-outlined">local_shipping</span>
                 <span class="text-sm font-medium">Tracking Produksi</span>
             </a>
@@ -80,11 +80,11 @@
             <div class="pt-4 pb-2">
                 <p class="px-3 text-[10px] uppercase tracking-wider text-white/40 font-bold">Pengaturan</p>
             </div>
-            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('profile') ? 'bg-white/10 text-white' : 'text-white/60 hover:bg-white/5 hover:text-white' }} transition-colors" href="#">
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('profile.*') ? 'bg-white/10 text-white' : 'text-white/60 hover:bg-white/5 hover:text-white' }} transition-colors" href="{{ route('profile.edit') }}">
                 <span class="material-symbols-outlined">person</span>
                 <span class="text-sm font-medium">Profile</span>
             </a>
-            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg {{ request()->routeIs('settings.*') ? 'bg-white/10 text-white' : 'text-white/60 hover:bg-white/5 hover:text-white' }} transition-colors" href="{{ route('settings.index') }}">
                 <span class="material-symbols-outlined">settings</span>
                 <span class="text-sm font-medium">Settings</span>
             </a>
