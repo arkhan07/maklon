@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Maklon Customer Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#001f3d",
+                "background-light": "#f5f7f8",
+                "background-dark": "#0f1923",
+              },
+              fontFamily: {
+                "display": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 font-display">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 bg-primary text-white flex flex-col h-full border-r border-primary/10">
+<div class="p-6 flex items-center gap-3">
+<div class="size-8 bg-white rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined font-bold">manufacturing</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight">Maklon.co</h1>
+</div>
+<nav class="flex-1 px-4 space-y-1 overflow-y-auto">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-white/10 text-white transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-sm font-medium">Overview</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">add_circle</span>
+<span class="text-sm font-medium">Buat Order Baru</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">package_2</span>
+<span class="text-sm font-medium">Order Saya</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-sm font-medium">Invoice</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="text-sm font-medium">Pembayaran</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">local_shipping</span>
+<span class="text-sm font-medium">Tracking</span>
+</a>
+<div class="pt-4 pb-2">
+<p class="px-3 text-[10px] uppercase tracking-wider text-white/40 font-bold">Pengaturan</p>
+</div>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-sm font-medium">Profile</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/60 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-sm font-medium">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-white/10">
+<div class="flex items-center gap-3 p-2">
+<div class="size-9 rounded-full bg-slate-500 border-2 border-white/20 overflow-hidden bg-cover bg-center" data-alt="User profile avatar circle" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBFA12GvJN9olkAWraGTbFuKO_PveZORfcIiUDUhw2Rmn_XDvWnXF4S1qgcTzDTq6jlQm152VAnNEMbvRdp2qL1tdQN6whkU2gY6F4Y7FyNC3L-l4IsUrumQTt1MCJCS6HDDvSrYWgFJ3TOkXBNQtDhc73MSLJCj4gDALyQ7tqiw6AHb8zmkLKxOQNZQaqYBGdUDCD6gACjzuGG5VebKuHV2Yu8gUf-60mXVuXcfP_d3V9EzN71GfmBHqGdltzc4-hacSkdBINzPZq2')"></div>
+<div class="flex flex-col min-w-0">
+<p class="text-xs font-semibold truncate">PT Maju Bersama</p>
+<p class="text-[10px] text-white/50 truncate">Premium Client</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col overflow-hidden bg-background-light dark:bg-background-dark">
+<!-- Topbar -->
+<header class="h-16 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 z-10">
+<div class="flex items-center gap-4">
+<nav class="flex text-sm text-slate-500 gap-2">
+<span>Home</span>
+<span class="text-slate-300">/</span>
+<span class="text-primary font-medium">Overview</span>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-100 rounded-lg relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-red-500 rounded-full border-2 border-white"></span>
+</button>
+<button class="flex items-center gap-2 pl-4 border-l border-slate-200 ml-2">
+<span class="text-sm font-medium text-slate-700">Help Center</span>
+<span class="material-symbols-outlined text-slate-400">help_outline</span>
+</button>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="flex-1 overflow-y-auto p-8 space-y-8">
+<div class="flex items-end justify-between">
+<div>
+<h2 class="text-2xl font-bold text-slate-900">Dashboard Overview</h2>
+<p class="text-slate-500 text-sm">Selamat datang kembali, berikut ringkasan pesanan Anda hari ini.</p>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg flex items-center gap-2 text-sm font-semibold transition-all shadow-sm">
+<span class="material-symbols-outlined size-5">add</span>
+                        Buat Order Baru
+                    </button>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-start justify-between">
+<div>
+<p class="text-slate-500 text-sm font-medium">Total Order</p>
+<h3 class="text-2xl font-bold mt-1">1,284</h3>
+</div>
+<div class="p-2 bg-primary/5 text-primary rounded-lg">
+<span class="material-symbols-outlined">list_alt</span>
+</div>
+</div>
+<div class="mt-4 flex items-center gap-1 text-[13px]">
+<span class="text-emerald-600 font-bold flex items-center">
+<span class="material-symbols-outlined text-sm">trending_up</span> 12.5%
+                            </span>
+<span class="text-slate-400">dari bulan lalu</span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-start justify-between">
+<div>
+<p class="text-slate-500 text-sm font-medium">Diproses</p>
+<h3 class="text-2xl font-bold mt-1">42</h3>
+</div>
+<div class="p-2 bg-amber-50 text-amber-600 rounded-lg">
+<span class="material-symbols-outlined">sync</span>
+</div>
+</div>
+<div class="mt-4 flex items-center gap-1 text-[13px]">
+<span class="text-amber-600 font-bold flex items-center">
+<span class="material-symbols-outlined text-sm">hourglass_empty</span> Aktif
+                            </span>
+<span class="text-slate-400">produksi berjalan</span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-start justify-between">
+<div>
+<p class="text-slate-500 text-sm font-medium">Selesai</p>
+<h3 class="text-2xl font-bold mt-1">1,210</h3>
+</div>
+<div class="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+</div>
+<div class="mt-4 flex items-center gap-1 text-[13px]">
+<span class="text-emerald-600 font-bold flex items-center">
+<span class="material-symbols-outlined text-sm">done_all</span> +5
+                            </span>
+<span class="text-slate-400">minggu ini</span>
+</div>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-start justify-between">
+<div>
+<p class="text-slate-500 text-sm font-medium">Invoice Pending</p>
+<h3 class="text-2xl font-bold mt-1">Rp 45.2M</h3>
+</div>
+<div class="p-2 bg-blue-50 text-blue-600 rounded-lg">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+</div>
+</div>
+<div class="mt-4 flex items-center gap-1 text-[13px]">
+<span class="text-slate-400 font-medium">Menunggu Pembayaran</span>
+</div>
+</div>
+</div>
+<!-- Middle Section: Chart -->
+<div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h4 class="font-bold text-slate-900">Order Activity</h4>
+<p class="text-slate-500 text-xs">Total pesanan manufaktur dalam 30 hari terakhir</p>
+</div>
+<select class="text-sm border-slate-200 rounded-lg bg-slate-50 px-3 py-1.5 focus:ring-primary focus:border-primary">
+<option>Last 30 Days</option>
+<option>Last 6 Months</option>
+<option>This Year</option>
+</select>
+</div>
+<div class="relative h-64 w-full">
+<!-- Chart SVG Placeholder mimicking a fintech line chart -->
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 1000 300">
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#001f3d" stop-opacity="0.1"></stop>
+<stop offset="100%" stop-color="#001f3d" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Grid Lines -->
+<line stroke="#f1f5f9" stroke-width="1" x1="0" x2="1000" y1="50" y2="50"></line>
+<line stroke="#f1f5f9" stroke-width="1" x1="0" x2="1000" y1="150" y2="150"></line>
+<line stroke="#f1f5f9" stroke-width="1" x1="0" x2="1000" y1="250" y2="250"></line>
+<!-- Area -->
+<path d="M0,250 L100,220 L200,240 L300,100 L400,150 L500,80 L600,120 L700,50 L800,140 L900,110 L1000,40 L1000,300 L0,300 Z" fill="url(#chartGradient)"></path>
+<!-- Line -->
+<path d="M0,250 L100,220 L200,240 L300,100 L400,150 L500,80 L600,120 L700,50 L800,140 L900,110 L1000,40" fill="none" stroke="#001f3d" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path>
+<!-- Dots -->
+<circle cx="1000" cy="40" fill="#001f3d" r="5"></circle>
+</svg>
+<div class="flex justify-between mt-4 text-[11px] text-slate-400 font-medium px-1">
+<span>01 May</span>
+<span>07 May</span>
+<span>14 May</span>
+<span>21 May</span>
+<span>28 May</span>
+<span>31 May</span>
+</div>
+</div>
+</div>
+<!-- Bottom Section: Table -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+<div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+<h4 class="font-bold text-slate-900">Order Terbaru</h4>
+<button class="text-primary text-sm font-semibold hover:underline">Lihat Semua</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-slate-50 dark:bg-slate-800/50">
+<tr>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Order ID</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Produk</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Tanggal</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Jumlah</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Aksi</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-6 py-4 text-sm font-semibold text-primary">#MK-90212</td>
+<td class="px-6 py-4 text-sm text-slate-700">Serum Vitamin C 30ml</td>
+<td class="px-6 py-4 text-sm text-slate-500">24 Mei 2024</td>
+<td class="px-6 py-4 text-sm font-medium text-slate-900">5,000 Pcs</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700">
+                                            Diproses
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<button class="text-slate-400 hover:text-primary"><span class="material-symbols-outlined">more_horiz</span></button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-6 py-4 text-sm font-semibold text-primary">#MK-90209</td>
+<td class="px-6 py-4 text-sm text-slate-700">Moisturizer Gel Pack</td>
+<td class="px-6 py-4 text-sm text-slate-500">22 Mei 2024</td>
+<td class="px-6 py-4 text-sm font-medium text-slate-900">2,500 Pcs</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">
+                                            Selesai
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<button class="text-slate-400 hover:text-primary"><span class="material-symbols-outlined">more_horiz</span></button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-6 py-4 text-sm font-semibold text-primary">#MK-90198</td>
+<td class="px-6 py-4 text-sm text-slate-700">Night Cream Collagen</td>
+<td class="px-6 py-4 text-sm text-slate-500">18 Mei 2024</td>
+<td class="px-6 py-4 text-sm font-medium text-slate-900">10,000 Pcs</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                                            Menunggu QC
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<button class="text-slate-400 hover:text-primary"><span class="material-symbols-outlined">more_horiz</span></button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-6 py-4 text-sm font-semibold text-primary">#MK-90185</td>
+<td class="px-6 py-4 text-sm text-slate-700">Sunscreen SPF 50+</td>
+<td class="px-6 py-4 text-sm text-slate-500">15 Mei 2024</td>
+<td class="px-6 py-4 text-sm font-medium text-slate-900">1,000 Pcs</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
+                                            Dibatalkan
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<button class="text-slate-400 hover:text-primary"><span class="material-symbols-outlined">more_horiz</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
