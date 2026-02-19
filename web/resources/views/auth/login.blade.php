@@ -115,7 +115,7 @@
                     />
                     <span class="ml-2 text-sm text-slate-500 dark:text-slate-400 group-hover:text-slate-700 transition-colors">Remember me</span>
                 </label>
-                <a class="text-sm font-semibold text-primary dark:text-blue-400 hover:opacity-80 transition-colors" href="#">Forgot password?</a>
+                <a class="text-sm font-semibold text-primary dark:text-blue-400 hover:opacity-80 transition-colors" href="{{ route('password.request') }}">Forgot password?</a>
             </div>
 
             <!-- Submit -->
