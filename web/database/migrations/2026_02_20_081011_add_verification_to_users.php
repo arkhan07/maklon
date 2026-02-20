@@ -9,15 +9,30 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->default('user')->change();
-            $table->enum('verification_status', ['unverified', 'pending', 'verified', 'rejected'])->default('unverified')->after('role');
-            $table->text('verification_notes')->nullable()->after('verification_status');
-            $table->timestamp('verified_at')->nullable()->after('verification_notes');
-            $table->string('business_type')->nullable()->after('verified_at');
-            $table->string('npwp')->nullable()->after('business_type');
-            $table->text('address')->nullable()->after('npwp');
-            $table->enum('legal_option', ['upload', 'buy_package'])->nullable()->after('address');
-            $table->string('legal_package_type')->nullable()->after('legal_option');
+            if (!Schema::hasColumn('users', 'verification_status')) {
+                $table->string('verification_status')->default('unverified')->after('role');
+            }
+            if (!Schema::hasColumn('users', 'verification_notes')) {
+                $table->text('verification_notes')->nullable()->after('verification_status');
+            }
+            if (!Schema::hasColumn('users', 'verified_at')) {
+                $table->timestamp('verified_at')->nullable()->after('verification_notes');
+            }
+            if (!Schema::hasColumn('users', 'business_type')) {
+                $table->string('business_type')->nullable()->after('verified_at');
+            }
+            if (!Schema::hasColumn('users', 'npwp')) {
+                $table->string('npwp')->nullable()->after('business_type');
+            }
+            if (!Schema::hasColumn('users', 'address')) {
+                $table->text('address')->nullable()->after('npwp');
+            }
+            if (!Schema::hasColumn('users', 'legal_option')) {
+                $table->string('legal_option')->nullable()->after('address');
+            }
+            if (!Schema::hasColumn('users', 'legal_package_type')) {
+                $table->string('legal_package_type')->nullable()->after('legal_option');
+            }
         });
     }
 
