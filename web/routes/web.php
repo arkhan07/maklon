@@ -17,7 +17,15 @@ use App\Http\Controllers\Admin;
 use App\Http\Controllers\SuperAdmin;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn() => redirect()->route('login'));
+Route::get('/', function () {
+    if (auth()->check()) {
+        $user = auth()->user();
+        if ($user->isSuperAdmin()) return redirect()->route('super_admin.dashboard');
+        if ($user->isAdmin()) return redirect()->route('admin.dashboard');
+        return redirect()->route('dashboard');
+    }
+    return view('home');
+})->name('home');
 
 // Guest Only
 Route::middleware('guest')->group(function () {

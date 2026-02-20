@@ -26,7 +26,7 @@ return new class extends Migration
 
             // Step 4: Packaging
             $table->foreignId('packaging_type_id')->nullable()->constrained('packaging_types')->nullOnDelete()->after('selected_materials');
-            $table->integer('quantity')->default(100)->after('packaging_type_id');
+            // quantity column already exists in create_orders_table, skip adding it
 
             // Step 5: Design & Sample
             $table->string('design_option')->nullable()->after('quantity'); // service, self_upload, none
