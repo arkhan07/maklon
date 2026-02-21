@@ -3,74 +3,66 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Invoice;
 use App\Models\Order;
+use App\Models\Invoice;
+use App\Models\MouDocument;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $query = Order::with('user')->latest();
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-        if ($request->filled('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('order_number', 'like', '%' . $request->search . '%')
-                  ->orWhere('product_name', 'like', '%' . $request->search . '%')
-                  ->orWhereHas('user', fn($u) => $u->where('name', 'like', '%' . $request->search . '%'));
-            });
-        }
-
-        $orders = $query->paginate(15)->withQueryString();
-        return view('admin.orders.index', compact('orders'));
+        $orders = Order::with('user', 'product')->latest()->paginate(20);
+        $stats = [
+            'pending'     => Order::where('status', 'pending')->count(),
+            'in_progress' => Order::where('status', 'in_progress')->count(),
+            'completed'   => Order::where('status', 'completed')->count(),
+        ];
+        return view('admin.orders.index', compact('orders', 'stats'));
     }
 
     public function show(Order $order)
     {
-        $order->load('user', 'invoice.payments');
+        $order->load('user', 'product', 'packagingType', 'mouDocument', 'invoices', 'payments');
         return view('admin.orders.show', compact('order'));
     }
 
     public function updateStatus(Request $request, Order $order)
     {
+        $request->validate(['status' => ['required', 'in:pending,confirmed,in_progress,completed,cancelled']]);
+        $order->update(['status' => $request->status]);
+
+        if ($request->status === 'confirmed') {
+            // Generate MOU
+            $mou = MouDocument::firstOrCreate(['order_id' => $order->id]);
+            $mou->update(['status' => 'waiting_signature']);
+            $order->update(['mou_status' => 'waiting']);
+        }
+
+        return redirect()->route('admin.orders.show', $order)->with('success', 'Status order berhasil diupdate.');
+    }
+
+    public function updateProduction(Request $request, Order $order)
+    {
         $request->validate([
-            'status'      => ['required', 'in:pending,processing,qc,shipping,done,cancelled'],
-            'admin_notes' => ['nullable', 'string', 'max:500'],
+            'production_status' => ['required', 'in:antri,mixing,qc,packing,siap_kirim,terkirim'],
+            'tracking_number'   => ['nullable', 'string'],
+            'courier'           => ['nullable', 'string'],
         ]);
-
-        $order->update([
-            'status'      => $request->status,
-            'admin_notes' => $request->admin_notes,
-        ]);
-
-        return back()->with('success', "Status order #{$order->order_number} diperbarui ke: {$order->statusLabel()}");
+        $order->update($request->only('production_status', 'tracking_number', 'courier'));
+        return redirect()->route('admin.orders.show', $order)->with('success', 'Status produksi berhasil diupdate.');
     }
 
     public function createInvoice(Request $request, Order $order)
     {
-        if ($order->invoice) {
-            return back()->with('error', 'Invoice untuk order ini sudah ada.');
-        }
-
-        $request->validate([
-            'amount'   => ['required', 'numeric', 'min:1'],
-            'due_date' => ['required', 'date', 'after:today'],
-            'notes'    => ['nullable', 'string', 'max:500'],
+        $invoice = Invoice::create([
+            'user_id'    => $order->user_id,
+            'order_id'   => $order->id,
+            'amount'     => $order->dp_amount,
+            'type'       => 'dp',
+            'status'     => 'pending',
+            'due_date'   => now()->addDays(7),
         ]);
-
-        Invoice::create([
-            'order_id'       => $order->id,
-            'user_id'        => $order->user_id,
-            'invoice_number' => Invoice::generateInvoiceNumber(),
-            'amount'         => $request->amount,
-            'status'         => 'pending',
-            'due_date'       => $request->due_date,
-            'notes'          => $request->notes,
-        ]);
-
-        return back()->with('success', 'Invoice berhasil dibuat dan dikirim ke customer.');
+        return redirect()->route('admin.invoices.show', $invoice)->with('success', 'Invoice DP berhasil dibuat.');
     }
 }

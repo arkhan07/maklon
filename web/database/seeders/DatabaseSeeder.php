@@ -10,30 +10,74 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // Super Admin
+        User::updateOrCreate(
+            ['email' => 'superadmin@maklon.id'],
+            [
+                'name'                => 'Super Admin',
+                'email'               => 'superadmin@maklon.id',
+                'password'            => Hash::make('superadmin123'),
+                'role'                => 'super_admin',
+                'is_active'           => true,
+                'email_verified_at'   => now(),
+                'verification_status' => 'verified',
+            ]
+        );
+
         // Admin
         User::updateOrCreate(
             ['email' => 'admin@maklon.id'],
             [
-                'name'     => 'Admin Maklon',
-                'email'    => 'admin@maklon.id',
-                'password' => Hash::make('admin123'),
-                'role'     => 'admin',
-                'is_active' => true,
+                'name'                => 'Admin Maklon',
+                'email'               => 'admin@maklon.id',
+                'password'            => Hash::make('admin123'),
+                'role'                => 'admin',
+                'is_active'           => true,
+                'email_verified_at'   => now(),
+                'verification_status' => 'verified',
             ]
         );
 
-        // Demo User
+        // User Terverifikasi
         User::updateOrCreate(
-            ['email' => 'demo@maklon.id'],
+            ['email' => 'user@maklon.id'],
             [
-                'name'         => 'Demo Customer',
-                'email'        => 'demo@maklon.id',
-                'password'     => Hash::make('demo123'),
-                'phone'        => '081234567890',
-                'company_name' => 'PT Demo Kosmetik',
-                'role'         => 'user',
-                'is_active'    => true,
+                'name'                => 'Budi Santoso',
+                'email'               => 'user@maklon.id',
+                'password'            => Hash::make('user123'),
+                'phone'               => '081234567890',
+                'company_name'        => 'PT Kosmetik Nusantara',
+                'role'                => 'user',
+                'is_active'           => true,
+                'email_verified_at'   => now(),
+                'verification_status' => 'verified',
+                'verified_at'         => now(),
+                'business_type'       => 'PT',
+                'npwp'                => '12.345.678.9-012.000',
+                'address'             => 'Jl. Sudirman No. 10, Jakarta Selatan',
             ]
         );
+
+        // User Belum Terverifikasi
+        User::updateOrCreate(
+            ['email' => 'newuser@maklon.id'],
+            [
+                'name'                => 'Siti Rahayu',
+                'email'               => 'newuser@maklon.id',
+                'password'            => Hash::make('user123'),
+                'phone'               => '082198765432',
+                'company_name'        => 'CV Beauty Alami',
+                'role'                => 'user',
+                'is_active'           => true,
+                'email_verified_at'   => now(),
+                'verification_status' => 'unverified',
+            ]
+        );
+
+        $this->call([
+            ProductCategorySeeder::class,
+            ProductSeeder::class,
+            MaterialSeeder::class,
+        ]);
     }
 }
