@@ -10,14 +10,14 @@ class VerificationController extends Controller
 {
     public function index()
     {
-        $pendingUsers = User::where('verification_status', 'pending')
+        $users = User::where('verification_status', 'pending')
             ->with('legalDocuments')->latest()->paginate(15);
         $stats = [
             'pending'  => User::where('verification_status', 'pending')->count(),
             'verified' => User::where('verification_status', 'verified')->count(),
             'rejected' => User::where('verification_status', 'rejected')->count(),
         ];
-        return view('admin.verifikasi.index', compact('pendingUsers', 'stats'));
+        return view('admin.verifikasi.index', compact('users', 'stats'));
     }
 
     public function show(User $user)
