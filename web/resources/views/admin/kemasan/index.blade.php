@@ -78,20 +78,20 @@
 
                 <!-- Price per Unit -->
                 <div>
-                    <label for="price_per_unit" class="block text-xs font-medium text-slate-600 mb-1.5 uppercase tracking-wide">
+                    <label for="price" class="block text-xs font-medium text-slate-600 mb-1.5 uppercase tracking-wide">
                         Harga / Pcs (Rp) <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400 font-medium">Rp</span>
                         <input
                             type="number"
-                            id="price_per_unit"
-                            name="price_per_unit"
-                            value="{{ old('price_per_unit') }}"
+                            id="price"
+                            name="price"
+                            value="{{ old('price') }}"
                             placeholder="0"
                             min="0"
                             step="100"
-                            class="w-full pl-9 pr-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors @error('price_per_unit') border-red-400 @enderror"
+                            class="w-full pl-9 pr-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors @error('price') border-red-400 @enderror"
                             required
                         >
                     </div>
@@ -157,7 +157,7 @@
                         </td>
                         <td class="px-6 py-4">
                             <span class="text-sm font-semibold text-slate-800">
-                                Rp {{ number_format($packaging->price_per_unit, 0, ',', '.') }}
+                                Rp {{ number_format($packaging->price, 0, ',', '.') }}
                             </span>
                             <span class="text-xs text-slate-400">/ pcs</span>
                         </td>

@@ -51,47 +51,50 @@
                         name="name"
                         value="{{ old('name') }}"
                         placeholder="Contoh: Aqua Destilata"
+                        list="existing-categories-name"
                         class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors @error('name') border-red-400 @enderror"
                         required
                     >
                 </div>
 
-                <!-- Unit -->
+                <!-- Category -->
                 <div>
-                    <label for="unit" class="block text-xs font-medium text-slate-600 mb-1.5 uppercase tracking-wide">
-                        Satuan <span class="text-red-500">*</span>
+                    <label for="category" class="block text-xs font-medium text-slate-600 mb-1.5 uppercase tracking-wide">
+                        Kategori <span class="text-red-500">*</span>
                     </label>
-                    <select
-                        id="unit"
-                        name="unit"
-                        class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors @error('unit') border-red-400 @enderror"
+                    <input
+                        type="text"
+                        id="category"
+                        name="category"
+                        value="{{ old('category') }}"
+                        placeholder="Contoh: Emollient"
+                        list="existing-categories"
+                        class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors @error('category') border-red-400 @enderror"
                         required
                     >
-                        <option value="">-- Pilih Satuan --</option>
-                        <option value="ml"  {{ old('unit') === 'ml'  ? 'selected' : '' }}>ml (mililiter)</option>
-                        <option value="g"   {{ old('unit') === 'g'   ? 'selected' : '' }}>g (gram)</option>
-                        <option value="pcs" {{ old('unit') === 'pcs' ? 'selected' : '' }}>pcs (satuan)</option>
-                        <option value="kg"  {{ old('unit') === 'kg'  ? 'selected' : '' }}>kg (kilogram)</option>
-                        <option value="liter" {{ old('unit') === 'liter' ? 'selected' : '' }}>liter</option>
-                    </select>
+                    <datalist id="existing-categories">
+                        @foreach($categories as $cat)
+                        <option value="{{ $cat }}">
+                        @endforeach
+                    </datalist>
                 </div>
 
-                <!-- Price per Unit -->
+                <!-- Price per ml -->
                 <div>
-                    <label for="price_per_unit" class="block text-xs font-medium text-slate-600 mb-1.5 uppercase tracking-wide">
-                        Harga / Satuan (Rp) <span class="text-red-500">*</span>
+                    <label for="price_per_ml" class="block text-xs font-medium text-slate-600 mb-1.5 uppercase tracking-wide">
+                        Harga / ml (Rp) <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
                         <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400 font-medium">Rp</span>
                         <input
                             type="number"
-                            id="price_per_unit"
-                            name="price_per_unit"
-                            value="{{ old('price_per_unit') }}"
+                            id="price_per_ml"
+                            name="price_per_ml"
+                            value="{{ old('price_per_ml') }}"
                             placeholder="0"
                             min="0"
-                            step="100"
-                            class="w-full pl-9 pr-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors @error('price_per_unit') border-red-400 @enderror"
+                            step="0.01"
+                            class="w-full pl-9 pr-3 py-2.5 border border-slate-300 rounded-lg text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors @error('price_per_ml') border-red-400 @enderror"
                             required
                         >
                     </div>
@@ -121,8 +124,8 @@
                 <thead class="bg-slate-50 border-b border-slate-100">
                     <tr>
                         <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Nama Material</th>
-                        <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Satuan</th>
-                        <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Harga / Satuan</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Kategori</th>
+                        <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Harga / ml</th>
                         <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Ditambahkan</th>
                         <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Aksi</th>
                     </tr>
@@ -135,14 +138,14 @@
                         </td>
                         <td class="px-6 py-4">
                             <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600">
-                                {{ $material->unit }}
+                                {{ $material->category }}
                             </span>
                         </td>
                         <td class="px-6 py-4">
                             <span class="text-sm font-semibold text-slate-800">
-                                Rp {{ number_format($material->price_per_unit, 0, ',', '.') }}
+                                Rp {{ number_format($material->price_per_ml, 0, ',', '.') }}
                             </span>
-                            <span class="text-xs text-slate-400">/ {{ $material->unit }}</span>
+                            <span class="text-xs text-slate-400">/ ml</span>
                         </td>
                         <td class="px-6 py-4 text-sm text-slate-500">
                             {{ $material->created_at->format('d M Y') }}
