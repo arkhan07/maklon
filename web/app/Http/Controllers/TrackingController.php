@@ -19,4 +19,11 @@ class TrackingController extends Controller
 
         return view('tracking.index', compact('orders', 'allOrders'));
     }
+
+    public function show(Order $order)
+    {
+        $this->authorize('view', $order);
+        $order->load('product', 'packagingType', 'mouDocument', 'invoices.payments');
+        return view('tracking.show', compact('order'));
+    }
 }

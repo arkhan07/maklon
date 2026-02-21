@@ -21,4 +21,13 @@ class InvoiceController extends Controller
         $invoice->load('order', 'payments');
         return view('invoices.show', compact('invoice'));
     }
+
+    public function downloadPdf(Invoice $invoice)
+    {
+        if ($invoice->user_id !== auth()->id()) {
+            abort(403);
+        }
+        $invoice->load('order.product', 'payments', 'user');
+        return view('invoices.print', compact('invoice'));
+    }
 }
