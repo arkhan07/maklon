@@ -10,7 +10,7 @@ class ProductCategorySeeder extends Seeder
 {
     public function run(): void
     {
-        DB::table('product_categories')->truncate();
+        \Illuminate\Support\Facades\Schema::disableForeignKeyConstraints(); DB::table('product_categories')->truncate(); DB::table('products')->truncate(); \Illuminate\Support\Facades\Schema::enableForeignKeyConstraints();
 
         $now = now();
 
