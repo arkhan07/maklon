@@ -100,6 +100,17 @@
                 @endif
             </a>
 
+            <a href="{{ route('admin.mou.index') }}"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all group
+                      {{ request()->routeIs('admin.mou.*') ? 'nav-active text-white' : 'text-white/55 hover:text-white hover:bg-white/8' }}">
+                <span class="material-symbols-outlined text-[20px] ms-nav">description</span>
+                <span class="flex-1">Verifikasi MOU</span>
+                @php $pendingMou = \App\Models\MouDocument::where('status','signed_uploaded')->count(); @endphp
+                @if($pendingMou > 0)
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500 text-white">{{ $pendingMou }}</span>
+                @endif
+            </a>
+
             <a href="{{ route('admin.invoices.index') }}"
                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
                       {{ request()->routeIs('admin.invoices.*') ? 'nav-active text-white' : 'text-white/55 hover:text-white hover:bg-white/8' }}">
@@ -119,14 +130,21 @@
             </a>
 
             <div class="pt-5 pb-1.5 px-3">
-                <p class="text-[9px] uppercase tracking-widest font-bold text-white/25">Katalog</p>
+                <p class="text-[9px] uppercase tracking-widest font-bold text-white/25">Master Data</p>
             </div>
+
+            <a href="{{ route('admin.produk.index') }}"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
+                      {{ request()->routeIs('admin.produk.*') ? 'nav-active text-white' : 'text-white/55 hover:text-white hover:bg-white/8' }}">
+                <span class="material-symbols-outlined text-[20px] ms-nav">inventory_2</span>
+                <span>Kelola Produk</span>
+            </a>
 
             <a href="{{ route('admin.material.index') }}"
                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all
                       {{ request()->routeIs('admin.material.*') ? 'nav-active text-white' : 'text-white/55 hover:text-white hover:bg-white/8' }}">
                 <span class="material-symbols-outlined text-[20px] ms-nav">science</span>
-                <span>Material</span>
+                <span>Bahan Baku</span>
             </a>
 
             <a href="{{ route('admin.kemasan.index') }}"

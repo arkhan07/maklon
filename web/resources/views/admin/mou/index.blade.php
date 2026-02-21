@@ -54,14 +54,14 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
                                 <div class="size-9 rounded-full bg-primary flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
-                                    {{ strtoupper(substr($mou->user->name, 0, 1)) }}
+                                    {{ strtoupper(substr($mou->order->user->name, 0, 1)) }}
                                 </div>
                                 <a href="{{ route('admin.mou.show', $mou) }}" class="text-sm font-semibold text-slate-800 hover:text-primary transition-colors">
-                                    {{ $mou->user->name }}
+                                    {{ $mou->order->user->name }}
                                 </a>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-sm text-slate-600">{{ $mou->user->email }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-600">{{ $mou->order->user->email }}</td>
                         <td class="px-6 py-4">
                             <span class="text-sm font-mono text-slate-700">{{ $mou->order->order_number ?? '-' }}</span>
                         </td>
