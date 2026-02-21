@@ -10,11 +10,12 @@ class TrackingController extends Controller
     public function index()
     {
         $orders = auth()->user()->orders()
-            ->whereNotIn('status', ['done', 'cancelled'])
+            ->with('product')
+            ->whereIn('status', ['confirmed', 'in_progress'])
             ->latest()
             ->get();
 
-        $allOrders = auth()->user()->orders()->latest()->get();
+        $allOrders = auth()->user()->orders()->with('product')->latest()->get();
 
         return view('tracking.index', compact('orders', 'allOrders'));
     }

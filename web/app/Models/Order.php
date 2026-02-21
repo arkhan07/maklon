@@ -70,7 +70,7 @@ class Order extends Model
         return $this->hasOne(MouDocument::class);
     }
 
-    public function getStatusLabelAttribute(): string
+    public function statusLabel(): string
     {
         return match($this->status) {
             'draft'       => 'Draft',
@@ -81,6 +81,24 @@ class Order extends Model
             'cancelled'   => 'Dibatalkan',
             default       => ucfirst($this->status),
         };
+    }
+
+    public function statusColor(): string
+    {
+        return match($this->status) {
+            'draft'       => 'bg-slate-100 text-slate-600',
+            'pending'     => 'bg-amber-100 text-amber-700',
+            'confirmed'   => 'bg-blue-100 text-blue-700',
+            'in_progress' => 'bg-violet-100 text-violet-700',
+            'completed'   => 'bg-emerald-100 text-emerald-700',
+            'cancelled'   => 'bg-red-100 text-red-600',
+            default       => 'bg-slate-100 text-slate-600',
+        };
+    }
+
+    public function getStatusLabelAttribute(): string
+    {
+        return $this->statusLabel();
     }
 
     public function getProductionStatusLabelAttribute(): string

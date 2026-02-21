@@ -33,8 +33,10 @@
                     <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold {{ $order->statusColor() }}">{{ $order->statusLabel() }}</span>
                 </div>
                 <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-100">
-                    <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Produk</p><p class="font-semibold text-slate-800 mt-1">{{ $order->product_name }}</p>@if($order->product_type)<p class="text-xs text-slate-400">{{ $order->product_type }}</p>@endif</div>
+                    <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Produk</p><p class="font-semibold text-slate-800 mt-1">{{ $order->product?->name ?? $order->product_name ?? '-' }}</p>@if($order->brand_name)<p class="text-xs text-slate-400">Brand: {{ $order->brand_name }}</p>@endif</div>
                     <div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Jumlah</p><p class="font-semibold text-slate-800 mt-1">{{ number_format($order->quantity) }} Pcs</p></div>
+                    @if($order->total_amount > 0)<div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Total Estimasi</p><p class="font-semibold text-slate-800 mt-1">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p></div>@endif
+                    @if($order->dp_amount > 0)<div><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">DP</p><p class="font-semibold text-primary mt-1">Rp {{ number_format($order->dp_amount, 0, ',', '.') }}</p></div>@endif
                     <div class="col-span-2"><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Customer</p><p class="font-semibold text-slate-800 mt-1">{{ $order->user->name }}</p><p class="text-sm text-slate-400">{{ $order->user->email }} · {{ $order->user->company_name }}</p></div>
                     @if($order->notes)<div class="col-span-2"><p class="text-xs text-slate-400 font-bold uppercase tracking-wider">Catatan Customer</p><p class="text-sm text-slate-600 mt-1">{{ $order->notes }}</p></div>@endif
                 </div>
@@ -49,41 +51,80 @@
                         <div class="space-y-1.5">
                             <label class="text-sm font-semibold text-slate-700">Status Baru</label>
                             <select name="status" class="block w-full px-4 py-3 border border-slate-200 rounded-lg text-slate-900 focus:ring-primary focus:border-primary bg-white">
-                                @foreach(['pending' => 'Menunggu Konfirmasi', 'processing' => 'Diproses', 'qc' => 'Quality Control', 'shipping' => 'Pengiriman', 'done' => 'Selesai', 'cancelled' => 'Dibatalkan'] as $val => $label)
+                                @foreach(['pending' => 'Menunggu Konfirmasi', 'confirmed' => 'Dikonfirmasi', 'in_progress' => 'Dalam Produksi', 'completed' => 'Selesai', 'cancelled' => 'Dibatalkan'] as $val => $label)
                                 <option value="{{ $val }}" {{ $order->status === $val ? 'selected' : '' }}>{{ $label }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="space-y-1.5">
-                            <label class="text-sm font-semibold text-slate-700">Catatan Admin</label>
-                            <input type="text" name="admin_notes" value="{{ $order->admin_notes }}" placeholder="Opsional..."
+                            <label class="text-sm font-semibold text-slate-700">Catatan</label>
+                            <input type="text" name="notes" value="{{ $order->notes }}" placeholder="Opsional..."
                                 class="block w-full px-4 py-3 border border-slate-200 rounded-lg text-slate-900 focus:ring-primary focus:border-primary"/>
                         </div>
                     </div>
                     <button type="submit" class="bg-primary text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:bg-primary/90 transition-all">Update Status</button>
                 </form>
+
+                {{-- Production Status --}}
+                @if(in_array($order->status, ['confirmed','in_progress']))
+                <form method="POST" action="{{ route('admin.orders.production', $order) }}" class="space-y-4 pt-4 border-t border-slate-100">
+                    @csrf @method('PUT')
+                    <h4 class="font-semibold text-slate-700">Update Status Produksi</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1.5">
+                            <label class="text-sm font-semibold text-slate-700">Status Produksi</label>
+                            <select name="production_status" class="block w-full px-4 py-3 border border-slate-200 rounded-lg text-slate-900 focus:ring-primary focus:border-primary bg-white">
+                                <option value="">-- Belum Mulai --</option>
+                                @foreach(['antri'=>'Antri Produksi','mixing'=>'Mixing Formula','qc'=>'Quality Control','packing'=>'Packing & Labeling','siap_kirim'=>'Siap Dikirim','terkirim'=>'Terkirim'] as $v=>$l)
+                                <option value="{{ $v }}" {{ $order->production_status === $v ? 'selected' : '' }}>{{ $l }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-sm font-semibold text-slate-700">Kurir</label>
+                            <input type="text" name="courier" value="{{ $order->courier }}" placeholder="JNE, TIKI, dll..."
+                                class="block w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-primary focus:border-primary"/>
+                        </div>
+                        <div class="col-span-2 space-y-1.5">
+                            <label class="text-sm font-semibold text-slate-700">Nomor Resi</label>
+                            <input type="text" name="tracking_number" value="{{ $order->tracking_number }}" placeholder="Nomor tracking pengiriman..."
+                                class="block w-full px-4 py-3 border border-slate-200 rounded-lg focus:ring-primary focus:border-primary"/>
+                        </div>
+                    </div>
+                    <button type="submit" class="bg-slate-800 text-white px-6 py-2.5 rounded-lg text-sm font-bold hover:bg-slate-700 transition-all">Update Produksi</button>
+                </form>
+                @endif
             </div>
 
             <!-- Create Invoice -->
-            @if(!$order->invoice)
+            @php $latestInvoice = $order->invoices->first(); @endphp
+            @if(!$latestInvoice)
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
-                <h3 class="font-bold text-slate-800 mb-4">Buat Invoice</h3>
+                <h3 class="font-bold text-slate-800 mb-4">Buat Invoice DP</h3>
+                @if($order->dp_amount > 0)
+                <div class="mb-4 p-3 bg-blue-50 border border-blue-100 rounded-lg text-sm text-blue-700">
+                    Estimasi DP: <strong>Rp {{ number_format($order->dp_amount, 0, ',', '.') }}</strong>
+                </div>
+                @endif
                 <form method="POST" action="{{ route('admin.orders.invoice', $order) }}" class="space-y-4">
                     @csrf
                     <div class="grid grid-cols-2 gap-4">
                         <div class="space-y-1.5">
                             <label class="text-sm font-semibold text-slate-700">Total Tagihan (Rp) <span class="text-red-500">*</span></label>
-                            <input type="number" name="amount" required min="1" placeholder="contoh: 5000000"
+                            <input type="number" name="amount" required min="1"
+                                value="{{ $order->dp_amount > 0 ? (int)$order->dp_amount : '' }}"
+                                placeholder="contoh: 5000000"
                                 class="block w-full px-4 py-3 border border-slate-200 rounded-lg text-slate-900 focus:ring-primary focus:border-primary"/>
                         </div>
                         <div class="space-y-1.5">
                             <label class="text-sm font-semibold text-slate-700">Jatuh Tempo <span class="text-red-500">*</span></label>
                             <input type="date" name="due_date" required min="{{ now()->addDay()->format('Y-m-d') }}"
+                                value="{{ now()->addDays(7)->format('Y-m-d') }}"
                                 class="block w-full px-4 py-3 border border-slate-200 rounded-lg text-slate-900 focus:ring-primary focus:border-primary"/>
                         </div>
                         <div class="col-span-2 space-y-1.5">
                             <label class="text-sm font-semibold text-slate-700">Catatan Invoice</label>
-                            <input type="text" name="notes" placeholder="Opsional..."
+                            <input type="text" name="notes" placeholder="DP 50% + Biaya Legal..."
                                 class="block w-full px-4 py-3 border border-slate-200 rounded-lg text-slate-900 focus:ring-primary focus:border-primary"/>
                         </div>
                     </div>
@@ -93,10 +134,10 @@
             @else
             <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
                 <div class="flex items-center justify-between">
-                    <div><h3 class="font-bold text-slate-800">Invoice</h3><p class="text-sm text-slate-500 mt-1">#{{ $order->invoice->invoice_number }} — {{ $order->invoice->formattedAmount() }}</p></div>
+                    <div><h3 class="font-bold text-slate-800">Invoice</h3><p class="text-sm text-slate-500 mt-1">#{{ $latestInvoice->invoice_number }} — {{ $latestInvoice->formattedAmount() }}</p></div>
                     <div class="flex items-center gap-3">
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {{ $order->invoice->statusColor() }}">{{ $order->invoice->statusLabel() }}</span>
-                        <a href="{{ route('admin.invoices.show', $order->invoice) }}" class="text-primary text-sm font-semibold hover:underline">Detail</a>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {{ $latestInvoice->statusColor() }}">{{ $latestInvoice->statusLabel() }}</span>
+                        <a href="{{ route('admin.invoices.show', $latestInvoice) }}" class="text-primary text-sm font-semibold hover:underline">Detail</a>
                     </div>
                 </div>
             </div>

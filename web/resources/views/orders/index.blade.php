@@ -51,10 +51,10 @@
                     <tr class="hover:bg-slate-50/50 transition-colors">
                         <td class="px-6 py-4 text-sm font-semibold text-primary">#{{ $order->order_number }}</td>
                         <td class="px-6 py-4">
-                            <p class="text-sm font-medium text-slate-800">{{ $order->product_name }}</p>
-                            @if($order->product_type)<p class="text-xs text-slate-400">{{ $order->product_type }}</p>@endif
+                            <p class="text-sm font-medium text-slate-800">{{ $order->product?->name ?? $order->product_name ?? '-' }}</p>
+                            @if($order->brand_name)<p class="text-xs text-slate-400">{{ $order->brand_name }}</p>@endif
                         </td>
-                        <td class="px-6 py-4 text-sm font-medium text-slate-900">{{ number_format($order->quantity) }} Pcs</td>
+                        <td class="px-6 py-4 text-sm font-medium text-slate-900">{{ $order->quantity ? number_format($order->quantity) . ' Pcs' : '-' }}</td>
                         <td class="px-6 py-4 text-sm text-slate-500">{{ $order->created_at->format('d M Y') }}</td>
                         <td class="px-6 py-4">
                             <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium {{ $order->statusColor() }}">
