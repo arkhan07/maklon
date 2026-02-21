@@ -36,6 +36,13 @@
                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium {{ $invoice->statusColor() }} mt-2">
                     {{ $invoice->statusLabel() }}
                 </span>
+                <div class="mt-3">
+                    <a href="{{ route('invoices.pdf', $invoice) }}" target="_blank"
+                       class="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-base">print</span>
+                        Cetak Invoice
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -50,7 +57,7 @@
                 <p class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Order</p>
                 <p class="font-semibold text-slate-800">{{ $invoice->order->product?->name ?? $invoice->order->product_name ?? '#' . $invoice->order->order_number }}</p>
                 <p class="text-sm text-slate-500">{{ number_format($invoice->order->quantity) }} Pcs</p>
-                <p class="text-xs text-slate-400 mt-2">Jatuh Tempo: {{ $invoice->due_date->format('d M Y') }}</p>
+                <p class="text-xs text-slate-400 mt-2">Jatuh Tempo: {{ $invoice->due_date?->format('d M Y') ?? '-' }}</p>
             </div>
         </div>
 

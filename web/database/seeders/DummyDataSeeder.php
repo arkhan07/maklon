@@ -26,10 +26,10 @@ class DummyDataSeeder extends Seeder
         MouDocument::truncate();
         LegalDocument::truncate();
         Order::truncate();
-        DB::delete('DELETE FROM users WHERE email NOT IN (
-            "superadmin@maklon.id", "admin@maklon.id",
-            "user@maklon.id", "newuser@maklon.id"
-        )');
+        User::whereNotIn('email', [
+            'superadmin@maklon.id', 'admin@maklon.id',
+            'user@maklon.id', 'newuser@maklon.id',
+        ])->delete();
         Schema::enableForeignKeyConstraints();
 
         // ──────────────────────────────────────────────────

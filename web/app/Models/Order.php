@@ -11,6 +11,7 @@ class Order extends Model
 {
     protected $fillable = [
         'user_id', 'order_number', 'status',
+        'product_name', 'product_type',
         'brand_type', 'brand_name', 'include_bpom', 'include_halal', 'include_logo', 'include_haki',
         'product_id', 'volume_ml', 'selected_materials',
         'packaging_type_id', 'quantity',
@@ -19,6 +20,7 @@ class Order extends Model
         'sample_cost', 'ppn', 'total_amount', 'dp_amount', 'remaining_amount',
         'production_status', 'tracking_number', 'courier',
         'current_step', 'mou_status', 'notes',
+        'confirmed_at', 'completed_at',
     ];
 
     protected $casts = [
@@ -38,6 +40,8 @@ class Order extends Model
         'total_amount'       => 'decimal:2',
         'dp_amount'          => 'decimal:2',
         'remaining_amount'   => 'decimal:2',
+        'confirmed_at'       => 'datetime',
+        'completed_at'       => 'datetime',
     ];
 
     public function user(): BelongsTo
