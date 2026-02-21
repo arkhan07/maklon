@@ -73,5 +73,11 @@ class DatabaseSeeder extends Seeder
                 'verification_status' => 'unverified',
             ]
         );
+
+        $this->call([
+            ProductCategorySeeder::class,
+            ProductSeeder::class,
+            MaterialSeeder::class,
+        ]);
     }
 }
