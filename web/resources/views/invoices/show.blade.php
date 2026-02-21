@@ -48,7 +48,7 @@
             </div>
             <div class="text-right">
                 <p class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-1">Order</p>
-                <p class="font-semibold text-slate-800">{{ $invoice->order->product_name }}</p>
+                <p class="font-semibold text-slate-800">{{ $invoice->order->product?->name ?? $invoice->order->product_name ?? '#' . $invoice->order->order_number }}</p>
                 <p class="text-sm text-slate-500">{{ number_format($invoice->order->quantity) }} Pcs</p>
                 <p class="text-xs text-slate-400 mt-2">Jatuh Tempo: {{ $invoice->due_date->format('d M Y') }}</p>
             </div>

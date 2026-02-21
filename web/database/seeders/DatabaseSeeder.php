@@ -78,6 +78,7 @@ class DatabaseSeeder extends Seeder
             ProductCategorySeeder::class,
             ProductSeeder::class,
             MaterialSeeder::class,
+            PackagingTypeSeeder::class,
         ]);
     }
 }

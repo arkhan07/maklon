@@ -33,14 +33,19 @@ class OrderController extends Controller
         return redirect()->route('orders.show', $order)->with('success', 'Order berhasil dibuat. Silakan lengkapi detail order.');
     }
 
-    public function show(Order $order)
+    public function show(Request $request, Order $order)
     {
         $this->authorize('view', $order);
-        $order->load(['product.category', 'packagingType', 'mouDocument']);
+        $order->load(['product.category', 'packagingType', 'mouDocument', 'invoices']);
         $materials = Material::where('is_available', true)->orderBy('category')->orderBy('name')->get();
         $packagingTypes = PackagingType::where('is_active', true)->orderBy('sort_order')->get();
         $categories = \App\Models\ProductCategory::whereNull('parent_id')->with('children.children.children.products')->where('is_active', true)->get();
-        return view('orders.show', compact('order', 'materials', 'packagingTypes', 'categories'));
+
+        $currentStep = (int) $request->input('step', $order->current_step ?? 1);
+        if ($currentStep > ($order->current_step ?? 1)) $currentStep = $order->current_step ?? 1;
+        if ($currentStep < 1) $currentStep = 1;
+
+        return view('orders.show', compact('order', 'materials', 'packagingTypes', 'categories', 'currentStep'));
     }
 
     public function updateStep(Request $request, Order $order)
@@ -74,6 +79,7 @@ class OrderController extends Controller
                 'design_description' => ['nullable', 'string'],
                 'request_sample'     => ['nullable', 'boolean'],
             ]),
+            6 => [],
             default => [],
         };
 
@@ -86,12 +92,13 @@ class OrderController extends Controller
         $data['include_haki']     = $request->boolean('include_haki');
         $data['request_sample']   = $request->boolean('request_sample');
 
+        if ($step === 6) {
+            $order->update(['status' => 'pending']);
+            return redirect()->route('orders.show', $order)->with('success', 'Order berhasil disubmit! Tim kami akan menghubungi Anda segera.');
+        }
+
         $order->update($data);
         $this->recalculate($order->fresh());
-
-        if ($step >= 5) {
-            return redirect()->route('orders.show', $order)->with('success', 'Order berhasil disubmit. Silakan review dan tanda tangani MOU.');
-        }
 
         return redirect()->route('orders.show', $order)->with('success', 'Langkah ' . $step . ' berhasil disimpan.');
     }
@@ -137,10 +144,7 @@ class OrderController extends Controller
         $dp       = $legalCost + $sampleCost + ($subtotal * 0.5);
         $sisa     = $subtotal * 0.5;
 
-        $order->update(compact(
-            'legalCost', 'baseCost', 'materialCost', 'packagingCost',
-            'designCost', 'sampleCost', 'ppn'
-        ) + [
+        $order->update([
             'legal_cost'      => $legalCost,
             'base_cost'       => $baseCost,
             'material_cost'   => $materialCost,

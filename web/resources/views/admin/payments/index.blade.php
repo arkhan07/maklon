@@ -33,7 +33,7 @@
                         <p class="font-bold text-slate-900">{{ $payment->user->name }}</p>
                         <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium {{ $payment->statusColor() }}">{{ $payment->statusLabel() }}</span>
                     </div>
-                    <p class="text-sm text-slate-500">Invoice #{{ $payment->invoice->invoice_number }} · {{ $payment->invoice->order->product_name ?? '' }}</p>
+                    <p class="text-sm text-slate-500">Invoice #{{ $payment->invoice->invoice_number }} · {{ $payment->invoice->order->product?->name ?? $payment->invoice->order->product_name ?? '' }}</p>
                     <div class="flex items-center gap-4 mt-2">
                         <span class="text-lg font-black text-primary">{{ $payment->formattedAmount() }}</span>
                         <span class="text-sm text-slate-500">via {{ $payment->methodLabel() }}</span>

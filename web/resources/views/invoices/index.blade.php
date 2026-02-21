@@ -35,7 +35,7 @@
                     @foreach($invoices as $invoice)
                     <tr class="hover:bg-slate-50/50 transition-colors">
                         <td class="px-6 py-4 text-sm font-semibold text-primary">#{{ $invoice->invoice_number }}</td>
-                        <td class="px-6 py-4 text-sm text-slate-700">{{ $invoice->order->product_name ?? '-' }}</td>
+                        <td class="px-6 py-4 text-sm text-slate-700">{{ $invoice->order->product?->name ?? $invoice->order->product_name ?? '#' . $invoice->order->order_number }}</td>
                         <td class="px-6 py-4 text-sm font-bold text-slate-900">{{ $invoice->formattedAmount() }}</td>
                         <td class="px-6 py-4 text-sm text-slate-500">{{ $invoice->due_date->format('d M Y') }}</td>
                         <td class="px-6 py-4">
