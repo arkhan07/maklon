@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('product_type')->nullable(); // serum, moisturizer, dll
             $table->integer('quantity');
             $table->text('notes')->nullable();
-            $table->enum('status', ['pending', 'processing', 'qc', 'shipping', 'done', 'cancelled'])->default('pending');
+            $table->enum('status', ['draft', 'pending', 'confirmed', 'in_progress', 'completed', 'cancelled'])->default('draft');
             $table->string('admin_notes')->nullable();
             $table->timestamps();
         });

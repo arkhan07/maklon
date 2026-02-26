@@ -20,6 +20,13 @@ class DummyDataSeeder extends Seeder
 {
     public function run(): void
     {
+        // Pastikan ENUM status orders sudah benar sebelum insert (MySQL only)
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE orders MODIFY COLUMN status
+                ENUM('draft','pending','confirmed','in_progress','completed','cancelled')
+                NOT NULL DEFAULT 'draft'");
+        }
+
         Schema::disableForeignKeyConstraints();
         Payment::truncate();
         Invoice::truncate();
