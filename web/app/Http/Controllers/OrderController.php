@@ -29,6 +29,8 @@ class OrderController extends Controller
             'order_number' => Order::generateOrderNumber(),
             'status'       => 'draft',
             'current_step' => 1,
+            'product_name' => '',
+            'quantity'     => 0,
         ]);
         return redirect()->route('orders.show', $order)->with('success', 'Order berhasil dibuat. Silakan lengkapi detail order.');
     }

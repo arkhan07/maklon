@@ -150,12 +150,18 @@
                         <td class="px-6 py-4 text-sm text-slate-500">
                             {{ $material->created_at->format('d M Y') }}
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="px-6 py-4 flex items-center gap-2">
+                            <button type="button"
+                                onclick="openEditMaterial({{ $material->id }}, '{{ addslashes($material->name) }}', '{{ addslashes($material->category) }}', {{ $material->price_per_ml }})"
+                                class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-primary border border-primary/30 rounded-lg hover:bg-primary hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-sm">edit</span>
+                                Edit
+                            </button>
                             <form method="POST" action="{{ route('admin.material.destroy', $material) }}" class="inline">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit"
-                                    onclick="return confirm('Hapus material \"{{ addslashes($material->name) }}\"? Tindakan ini tidak dapat dibatalkan.')"
+                                    onclick="return confirm('Hapus material \"{{ addslashes($material->name) }}\"?')"
                                     class="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-red-600 border border-red-200 rounded-lg hover:bg-red-500 hover:text-white hover:border-red-500 transition-colors">
                                     <span class="material-symbols-outlined text-sm">delete</span>
                                     Hapus
@@ -179,4 +185,70 @@
         @endif
     </div>
 </div>
+
+<!-- Edit Modal -->
+<div id="editMaterialModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 backdrop-blur-sm">
+    <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-md mx-4">
+        <div class="flex items-center justify-between mb-5">
+            <h3 class="font-bold text-slate-800 text-lg">Edit Material</h3>
+            <button onclick="closeEditMaterial()" class="text-slate-400 hover:text-slate-600">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <form id="editMaterialForm" method="POST" class="space-y-4">
+            @csrf
+            @method('PUT')
+            <div>
+                <label class="block text-xs font-medium text-slate-600 mb-1.5 uppercase tracking-wide">Nama Material *</label>
+                <input type="text" name="name" id="editMatName" required
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary">
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-slate-600 mb-1.5 uppercase tracking-wide">Kategori *</label>
+                <input type="text" name="category" id="editMatCategory" required list="cat-list"
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary">
+                <datalist id="cat-list">
+                    @foreach($categories as $cat)
+                    <option value="{{ $cat }}">
+                    @endforeach
+                </datalist>
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-slate-600 mb-1.5 uppercase tracking-wide">Harga / ml (Rp) *</label>
+                <input type="number" name="price_per_ml" id="editMatPrice" min="0" step="0.01" required
+                    class="w-full px-3 py-2.5 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary">
+            </div>
+            <div class="flex gap-3 pt-2">
+                <button type="submit"
+                    class="flex-1 bg-primary text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors">
+                    Simpan Perubahan
+                </button>
+                <button type="button" onclick="closeEditMaterial()"
+                    class="flex-1 border border-slate-200 text-slate-600 py-2.5 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors">
+                    Batal
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection
+
+@push('scripts')
+<script>
+function openEditMaterial(id, name, category, price) {
+    document.getElementById('editMatName').value = name;
+    document.getElementById('editMatCategory').value = category;
+    document.getElementById('editMatPrice').value = price;
+    document.getElementById('editMaterialForm').action = '/admin/material/' + id;
+    document.getElementById('editMaterialModal').classList.remove('hidden');
+    document.getElementById('editMaterialModal').classList.add('flex');
+}
+function closeEditMaterial() {
+    document.getElementById('editMaterialModal').classList.add('hidden');
+    document.getElementById('editMaterialModal').classList.remove('flex');
+}
+document.getElementById('editMaterialModal').addEventListener('click', function(e) {
+    if (e.target === this) closeEditMaterial();
+});
+</script>
+@endpush
